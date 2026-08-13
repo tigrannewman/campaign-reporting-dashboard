@@ -27,7 +27,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col bg-neutral-50 dark:bg-black">
         <Header />
-        <CampaignChips />
+        <div className="mx-auto w-full max-w-7xl">
+          <CampaignChips />
+        </div>
         <main className="mx-auto w-full max-w-7xl flex-1 px-4 pb-12 sm:px-6">
           {children}
         </main>
