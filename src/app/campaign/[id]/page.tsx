@@ -1,0 +1,136 @@
+import { notFound } from "next/navigation";
+import { campaigns, getCampaign } from "@/lib/data";
+import { fmtCurrency, fmtNumber, fmtPercent } from "@/lib/format";
+import { TableCard, Th, Td } from "@/components/DataTable";
+import StatCard from "@/components/StatCard";
+
+export function generateStaticParams() {
+  return campaigns.map((c) => ({ id: c.id }));
+}
+
+export default async function CampaignPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const campaign = getCampaign(id);
+  if (!campaign) notFound();
+
+  const { metrics } = campaign;
+
+  return (
+    <div className="flex flex-col gap-8 pt-2">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">{campaign.name}</h1>
+        <p className="mt-1 text-sm text-black/50 dark:text-white/50">
+          Individual performance metrics and reporting for this campaign.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <StatCard label="Ad Spend" value={fmtCurrency(metrics.adSpend)} />
+        <StatCard label="Impressions" value={fmtNumber(metrics.impressions)} />
+        <StatCard label="Visitors (Unique)" value={fmtNumber(metrics.uniqueVisitors)} />
+        <StatCard label="Click Through Rate" value={fmtPercent(metrics.ctr)} />
+        <StatCard label="Conversion Rate" value={fmtPercent(metrics.conversionRate)} />
+        <StatCard label="Cost Per Lead" value={fmtCurrency(metrics.costPerLead)} />
+        <StatCard label="CPM" value={fmtCurrency(metrics.cpm)} />
+        <StatCard label="Cost Per Click" value={fmtCurrency(metrics.costPerClick)} />
+      </div>
+
+      <div>
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-black/50 dark:text-white/50">
+          Engagement Metrics
+        </h2>
+        <div className="grid grid-cols-3 gap-3">
+          <StatCard label="Likes" value={fmtNumber(metrics.likes)} />
+          <StatCard label="Shares" value={fmtNumber(metrics.shares)} />
+          <StatCard label="DMs" value={fmtNumber(metrics.dms)} />
+        </div>
+      </div>
+
+      <TableCard title="Ad Angles & Ad Sets">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="border-b border-black/10 dark:border-white/10">
+              <Th>Ad Angle</Th>
+              <Th>Ad Set Name</Th>
+              <Th>Spend</Th>
+              <Th>Impressions</Th>
+              <Th>Clicks</Th>
+              <Th>CTR (%)</Th>
+            </tr>
+          </thead>
+          <tbody>
+            {campaign.adSets.map((row) => (
+              <tr
+                key={row.adSetName}
+                className="border-b border-black/5 last:border-0 hover:bg-black/[0.02] dark:border-white/5 dark:hover:bg-white/[0.03]"
+              >
+                <Td>{row.adAngle}</Td>
+                <Td>{row.adSetName}</Td>
+                <Td>{fmtCurrency(row.spend)}</Td>
+                <Td>{fmtNumber(row.impressions)}</Td>
+                <Td>{fmtNumber(row.clicks)}</Td>
+                <Td>{fmtPercent(row.ctr)}</Td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </TableCard>
+
+      <TableCard title="Demographics">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="border-b border-black/10 dark:border-white/10">
+              <Th>Country</Th>
+              <Th>Region</Th>
+              <Th>Gender</Th>
+              <Th>% of Audience</Th>
+            </tr>
+          </thead>
+          <tbody>
+            {campaign.demographics.map((row, i) => (
+              <tr
+                key={i}
+                className="border-b border-black/5 last:border-0 hover:bg-black/[0.02] dark:border-white/5 dark:hover:bg-white/[0.03]"
+              >
+                <Td>{row.country}</Td>
+                <Td>{row.region}</Td>
+                <Td>{row.gender}</Td>
+                <Td>{fmtPercent(row.percentage)}</Td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </TableCard>
+
+      <TableCard title="Survey Responses">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="border-b border-black/10 dark:border-white/10">
+              <Th>Question</Th>
+              <Th>Answer</Th>
+              <Th>Respondents</Th>
+              <Th>%</Th>
+            </tr>
+          </thead>
+          <tbody>
+            {campaign.surveyResponses.map((row, i) => (
+              <tr
+                key={i}
+                className="border-b border-black/5 last:border-0 hover:bg-black/[0.02] dark:border-white/5 dark:hover:bg-white/[0.03]"
+              >
+                <Td>{row.question}</Td>
+                <Td>{row.answer}</Td>
+                <Td>{fmtNumber(row.respondents)}</Td>
+                <Td>{fmtPercent(row.percentage)}</Td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </TableCard>
+    </div>
+  );
+}
