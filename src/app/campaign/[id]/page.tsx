@@ -34,10 +34,10 @@ export default async function CampaignPage({
         <StatCard label="Visitors" value={fmtNumber(metrics.uniqueVisitors)} />
         <StatCard label="Subscriptions" value={fmtNumber(metrics.subscriptions)} />
         <StatCard label="Subscription Rate" value={fmtPercent(metrics.conversionRate)} />
+        <StatCard label="Cost Per Subscription" value={fmtCurrency(metrics.costPerLead)} />
+        <StatCard label="CPC" value={fmtCurrency(metrics.costPerClick)} />
         <StatCard label="Click Through Rate" value={fmtPercent(metrics.ctr)} />
-        <StatCard label="Cost Per Lead" value={fmtCurrency(metrics.costPerLead)} />
         <StatCard label="CPM" value={fmtCurrency(metrics.cpm)} />
-        <StatCard label="Cost Per Click" value={fmtCurrency(metrics.costPerClick)} />
       </div>
 
       <div>
