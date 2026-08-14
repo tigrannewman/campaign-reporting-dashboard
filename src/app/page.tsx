@@ -22,9 +22,10 @@ export default function Home() {
               <Th>Concept</Th>
               <Th>Spends</Th>
               <Th>Impressions</Th>
-              <Th>Visitors (Unique)</Th>
+              <Th>Visitors</Th>
+              <Th>Subscriptions</Th>
+              <Th>Subscription Rate (%)</Th>
               <Th>CTR (%)</Th>
-              <Th>Conversion Rate (%)</Th>
               <Th>Cost Per Lead</Th>
               <Th>CPM</Th>
               <Th>Cost Per Click</Th>
@@ -47,8 +48,9 @@ export default function Home() {
                 <Td>{fmtCurrency(c.metrics.adSpend)}</Td>
                 <Td>{fmtNumber(c.metrics.impressions)}</Td>
                 <Td>{fmtNumber(c.metrics.uniqueVisitors)}</Td>
-                <Td>{fmtPercent(c.metrics.ctr)}</Td>
+                <Td>{fmtNumber(c.metrics.subscriptions)}</Td>
                 <Td>{fmtPercent(c.metrics.conversionRate)}</Td>
+                <Td>{fmtPercent(c.metrics.ctr)}</Td>
                 <Td>{fmtCurrency(c.metrics.costPerLead)}</Td>
                 <Td>{fmtCurrency(c.metrics.cpm)}</Td>
                 <Td>{fmtCurrency(c.metrics.costPerClick)}</Td>
@@ -62,8 +64,9 @@ export default function Home() {
               <Td>{fmtCurrency(totals.adSpend)}</Td>
               <Td>{fmtNumber(totals.impressions)}</Td>
               <Td>{fmtNumber(totals.uniqueVisitors)}</Td>
-              <Td>{fmtPercent(totals.ctr)}</Td>
+              <Td>{fmtNumber(totals.subscriptions)}</Td>
               <Td>{fmtPercent(totals.conversionRate)}</Td>
+              <Td>{fmtPercent(totals.ctr)}</Td>
               <Td>{fmtCurrency(totals.costPerLead)}</Td>
               <Td>{fmtCurrency(totals.cpm)}</Td>
               <Td>{fmtCurrency(totals.costPerClick)}</Td>

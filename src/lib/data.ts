@@ -2,8 +2,9 @@ export type Metrics = {
   adSpend: number;
   impressions: number;
   uniqueVisitors: number;
+  subscriptions: number;
   ctr: number; // %
-  conversionRate: number; // %
+  conversionRate: number; // % (Subscription Rate)
   costPerLead: number; // $
   cpm: number; // $
   costPerClick: number; // $
@@ -52,6 +53,7 @@ export const campaigns: Campaign[] = [
       adSpend: 4250,
       impressions: 512000,
       uniqueVisitors: 8930,
+      subscriptions: 277,
       ctr: 2.4,
       conversionRate: 3.1,
       costPerLead: 12.45,
@@ -87,6 +89,7 @@ export const campaigns: Campaign[] = [
       adSpend: 3680,
       impressions: 467000,
       uniqueVisitors: 7420,
+      subscriptions: 193,
       ctr: 2.1,
       conversionRate: 2.6,
       costPerLead: 14.2,
@@ -122,6 +125,7 @@ export const campaigns: Campaign[] = [
       adSpend: 5120,
       impressions: 601000,
       uniqueVisitors: 10250,
+      subscriptions: 349,
       ctr: 2.7,
       conversionRate: 3.4,
       costPerLead: 11.1,
@@ -157,6 +161,7 @@ export const campaigns: Campaign[] = [
       adSpend: 2980,
       impressions: 389000,
       uniqueVisitors: 6110,
+      subscriptions: 134,
       ctr: 1.9,
       conversionRate: 2.2,
       costPerLead: 15.8,
@@ -192,6 +197,7 @@ export const campaigns: Campaign[] = [
       adSpend: 6340,
       impressions: 715000,
       uniqueVisitors: 12480,
+      subscriptions: 474,
       ctr: 3.0,
       conversionRate: 3.8,
       costPerLead: 9.9,
@@ -233,6 +239,7 @@ export function aggregateMetrics(): Metrics {
       acc.adSpend += c.metrics.adSpend;
       acc.impressions += c.metrics.impressions;
       acc.uniqueVisitors += c.metrics.uniqueVisitors;
+      acc.subscriptions += c.metrics.subscriptions;
       acc.ctr += c.metrics.ctr;
       acc.conversionRate += c.metrics.conversionRate;
       acc.costPerLead += c.metrics.costPerLead;
@@ -247,6 +254,7 @@ export function aggregateMetrics(): Metrics {
       adSpend: 0,
       impressions: 0,
       uniqueVisitors: 0,
+      subscriptions: 0,
       ctr: 0,
       conversionRate: 0,
       costPerLead: 0,

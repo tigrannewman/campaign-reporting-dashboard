@@ -31,9 +31,10 @@ export default async function CampaignPage({
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard label="Spends" value={fmtCurrency(metrics.adSpend)} />
         <StatCard label="Impressions" value={fmtNumber(metrics.impressions)} />
-        <StatCard label="Visitors (Unique)" value={fmtNumber(metrics.uniqueVisitors)} />
+        <StatCard label="Visitors" value={fmtNumber(metrics.uniqueVisitors)} />
+        <StatCard label="Subscriptions" value={fmtNumber(metrics.subscriptions)} />
+        <StatCard label="Subscription Rate" value={fmtPercent(metrics.conversionRate)} />
         <StatCard label="Click Through Rate" value={fmtPercent(metrics.ctr)} />
-        <StatCard label="Conversion Rate" value={fmtPercent(metrics.conversionRate)} />
         <StatCard label="Cost Per Lead" value={fmtCurrency(metrics.costPerLead)} />
         <StatCard label="CPM" value={fmtCurrency(metrics.cpm)} />
         <StatCard label="Cost Per Click" value={fmtCurrency(metrics.costPerClick)} />
