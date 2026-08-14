@@ -3,6 +3,9 @@ import { campaigns, getCampaign } from "@/lib/data";
 import { fmtCurrency, fmtNumber, fmtPercent } from "@/lib/format";
 import { TableCard, Th, Td } from "@/components/DataTable";
 import StatCard from "@/components/StatCard";
+import DonutChart from "@/components/charts/DonutChart";
+import AgeGenderPyramid from "@/components/charts/AgeGenderPyramid";
+import HorizontalBars from "@/components/charts/HorizontalBars";
 
 export function generateStaticParams() {
   return campaigns.map((c) => ({ id: c.id }));
@@ -51,61 +54,65 @@ export default async function CampaignPage({
         </div>
       </div>
 
-      <TableCard title="Ad Angles & Ad Sets">
+      <TableCard title="Ad Angles">
         <table className="w-full border-collapse">
           <thead>
             <tr className="border-b border-black/10 dark:border-white/10">
               <Th>Ad Angle</Th>
-              <Th>Ad Set Name</Th>
-              <Th>Spend</Th>
+              <Th>Spends</Th>
               <Th>Impressions</Th>
               <Th>Clicks</Th>
               <Th>CTR (%)</Th>
+              <Th>Visitors</Th>
+              <Th>Subscriptions</Th>
             </tr>
           </thead>
           <tbody>
             {campaign.adSets.map((row) => (
               <tr
-                key={row.adSetName}
+                key={row.adAngle}
                 className="border-b border-black/5 last:border-0 hover:bg-black/[0.02] dark:border-white/5 dark:hover:bg-white/[0.03]"
               >
                 <Td>{row.adAngle}</Td>
-                <Td>{row.adSetName}</Td>
                 <Td>{fmtCurrency(row.spend)}</Td>
                 <Td>{fmtNumber(row.impressions)}</Td>
                 <Td>{fmtNumber(row.clicks)}</Td>
                 <Td>{fmtPercent(row.ctr)}</Td>
+                <Td>{fmtNumber(row.visitors)}</Td>
+                <Td>{fmtNumber(row.subscriptions)}</Td>
               </tr>
             ))}
           </tbody>
         </table>
       </TableCard>
 
-      <TableCard title="Demographics">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="border-b border-black/10 dark:border-white/10">
-              <Th>Country</Th>
-              <Th>Region</Th>
-              <Th>Gender</Th>
-              <Th>% of Audience</Th>
-            </tr>
-          </thead>
-          <tbody>
-            {campaign.demographics.map((row, i) => (
-              <tr
-                key={i}
-                className="border-b border-black/5 last:border-0 hover:bg-black/[0.02] dark:border-white/5 dark:hover:bg-white/[0.03]"
-              >
-                <Td>{row.country}</Td>
-                <Td>{row.region}</Td>
-                <Td>{row.gender}</Td>
-                <Td>{fmtPercent(row.percentage)}</Td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </TableCard>
+      <div>
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-black/50 dark:text-white/50">
+          Demographics
+        </h2>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <TableCard title="Angle">
+            <div className="p-5">
+              <DonutChart segments={campaign.demographicsCharts.angles} />
+            </div>
+          </TableCard>
+          <TableCard title="Age and Gender">
+            <div className="p-5">
+              <AgeGenderPyramid rows={campaign.demographicsCharts.ageGender} />
+            </div>
+          </TableCard>
+          <TableCard title="Country">
+            <div className="p-5">
+              <HorizontalBars rows={campaign.demographicsCharts.countries.map((c) => ({ label: c.country, value: c.value }))} />
+            </div>
+          </TableCard>
+          <TableCard title="Interests">
+            <div className="p-5">
+              <HorizontalBars rows={campaign.demographicsCharts.interests} />
+            </div>
+          </TableCard>
+        </div>
+      </div>
 
       <TableCard title="Survey Responses">
         <table className="w-full border-collapse">
