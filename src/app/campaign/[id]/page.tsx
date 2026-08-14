@@ -24,12 +24,12 @@ export default async function CampaignPage({
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">{campaign.name}</h1>
         <p className="mt-1 text-sm text-black/50 dark:text-white/50">
-          Individual performance metrics and reporting for this campaign.
+          Individual performance metrics and reporting for this concept.
         </p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatCard label="Ad Spend" value={fmtCurrency(metrics.adSpend)} />
+        <StatCard label="Spends" value={fmtCurrency(metrics.adSpend)} />
         <StatCard label="Impressions" value={fmtNumber(metrics.impressions)} />
         <StatCard label="Visitors (Unique)" value={fmtNumber(metrics.uniqueVisitors)} />
         <StatCard label="Click Through Rate" value={fmtPercent(metrics.ctr)} />

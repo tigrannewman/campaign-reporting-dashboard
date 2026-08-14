@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Prelaunch Reporting Dashboard",
-  description: "Campaign performance reporting dashboard",
+  description: "Concept performance reporting dashboard",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

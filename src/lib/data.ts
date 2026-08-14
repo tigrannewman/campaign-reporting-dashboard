@@ -47,7 +47,7 @@ export type Campaign = {
 export const campaigns: Campaign[] = [
   {
     id: "campaign-1",
-    name: "Campaign 1",
+    name: "Concept 1",
     metrics: {
       adSpend: 4250,
       impressions: 512000,
@@ -82,7 +82,7 @@ export const campaigns: Campaign[] = [
   },
   {
     id: "campaign-2",
-    name: "Campaign 2",
+    name: "Concept 2",
     metrics: {
       adSpend: 3680,
       impressions: 467000,
@@ -117,7 +117,7 @@ export const campaigns: Campaign[] = [
   },
   {
     id: "campaign-3",
-    name: "Campaign 3",
+    name: "Concept 3",
     metrics: {
       adSpend: 5120,
       impressions: 601000,
@@ -152,7 +152,7 @@ export const campaigns: Campaign[] = [
   },
   {
     id: "campaign-4",
-    name: "Campaign 4",
+    name: "Concept 4",
     metrics: {
       adSpend: 2980,
       impressions: 389000,
@@ -187,7 +187,7 @@ export const campaigns: Campaign[] = [
   },
   {
     id: "campaign-5",
-    name: "Campaign 5",
+    name: "Concept 5",
     metrics: {
       adSpend: 6340,
       impressions: 715000,

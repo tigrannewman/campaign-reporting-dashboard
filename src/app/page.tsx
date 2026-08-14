@@ -9,9 +9,9 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-6 pt-2">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">All Campaigns</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">All Concepts</h1>
         <p className="mt-1 text-sm text-black/50 dark:text-white/50">
-          Performance overview across all active campaigns.
+          Performance overview across all active concepts.
         </p>
       </div>
 
@@ -19,8 +19,8 @@ export default function Home() {
         <table className="w-full border-collapse">
           <thead>
             <tr className="border-b border-black/10 dark:border-white/10">
-              <Th>Campaign</Th>
-              <Th>Ad Spend</Th>
+              <Th>Concept</Th>
+              <Th>Spends</Th>
               <Th>Impressions</Th>
               <Th>Visitors (Unique)</Th>
               <Th>CTR (%)</Th>
