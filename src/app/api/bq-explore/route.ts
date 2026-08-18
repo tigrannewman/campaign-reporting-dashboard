@@ -11,9 +11,11 @@ export async function GET() {
 
   let credentials: { project_id?: string; client_email?: string; private_key?: string };
   try {
-    credentials = JSON.parse(raw);
+    const looksLikeJson = raw.trim().startsWith("{");
+    const decoded = looksLikeJson ? raw : Buffer.from(raw, "base64").toString("utf8");
+    credentials = JSON.parse(decoded);
   } catch {
-    return NextResponse.json({ error: "googleCloud env var is not valid JSON" }, { status: 500 });
+    return NextResponse.json({ error: "googleCloud env var is not valid JSON or base64-encoded JSON" }, { status: 500 });
   }
 
   if (!credentials.private_key || !credentials.project_id) {
