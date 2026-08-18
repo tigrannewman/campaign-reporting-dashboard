@@ -1,50 +1,27 @@
-import { BigQuery } from "@google-cloud/bigquery";
 import { NextResponse } from "next/server";
+import { initBigQuery } from "@/lib/bigquery";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const raw = process.env.googleCloud;
-  if (!raw) {
-    return NextResponse.json({ error: "googleCloud env var is not set" }, { status: 500 });
-  }
+  const clientEmail = process.env.BQ_CLIENT_EMAIL;
+  const privateKey = process.env.BQ_PRIVATE_KEY;
 
-  let credentials: { project_id?: string; client_email?: string; private_key?: string };
-  try {
-    const looksLikeJson = raw.trim().startsWith("{");
-    const decoded = looksLikeJson ? raw : Buffer.from(raw, "base64").toString("utf8");
-    credentials = JSON.parse(decoded);
-  } catch (parseErr) {
-    const decoded = raw.trim().startsWith("{") ? raw : Buffer.from(raw, "base64").toString("utf8");
+  if (!clientEmail || !privateKey) {
     return NextResponse.json(
       {
-        error: "googleCloud env var is not valid JSON or base64-encoded JSON",
+        error: "BQ_CLIENT_EMAIL or BQ_PRIVATE_KEY env var is not set",
         diagnostics: {
-          rawLength: raw.length,
-          rawTrimmedLength: raw.trim().length,
-          rawStartsWithBrace: raw.trim().startsWith("{"),
-          rawFirstChar: JSON.stringify(raw.slice(0, 1)),
-          rawLastChar: JSON.stringify(raw.slice(-1)),
-          decodedLength: decoded.length,
-          decodedStartsWithBrace: decoded.trim().startsWith("{"),
-          decodedFirst20: JSON.stringify(decoded.slice(0, 20)),
-          parseErrorMessage: parseErr instanceof Error ? parseErr.message : String(parseErr),
+          hasClientEmail: Boolean(clientEmail),
+          hasPrivateKey: Boolean(privateKey),
         },
       },
       { status: 500 }
     );
   }
 
-  if (!credentials.private_key || !credentials.project_id) {
-    return NextResponse.json({ error: "googleCloud env var is missing project_id or private_key" }, { status: 500 });
-  }
-
   try {
-    const bigquery = new BigQuery({
-      projectId: credentials.project_id,
-      credentials,
-    });
-
+    const bigquery = initBigQuery();
     const [datasets] = await bigquery.getDatasets();
 
     const result = await Promise.all(
@@ -64,7 +41,7 @@ export async function GET() {
       })
     );
 
-    return NextResponse.json({ project: credentials.project_id, datasets: result });
+    return NextResponse.json({ datasets: result });
   } catch (err) {
     return NextResponse.json(
       { error: err instanceof Error ? err.message : "Unknown BigQuery error" },
