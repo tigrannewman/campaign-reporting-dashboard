@@ -22,6 +22,19 @@ export async function GET() {
     );
   }
 
+  const converted = privateKey.replace(/\\n/g, "\n");
+  const keyDiagnostics = {
+    rawLength: privateKey.length,
+    rawHasLiteralBackslashN: privateKey.includes("\\n"),
+    rawHasRealNewline: privateKey.includes("\n"),
+    convertedLength: converted.length,
+    convertedLineCount: converted.split("\n").length,
+    startsWithBeginMarker: converted.trim().startsWith("-----BEGIN PRIVATE KEY-----"),
+    endsWithEndMarker: converted.trim().endsWith("-----END PRIVATE KEY-----"),
+    rawFirstChar: JSON.stringify(privateKey.slice(0, 1)),
+    rawLastChar: JSON.stringify(privateKey.slice(-1)),
+  };
+
   try {
     const bigquery = initBigQuery();
     const [datasets] = await bigquery.getDatasets();
@@ -46,7 +59,10 @@ export async function GET() {
     return NextResponse.json({ datasets: result });
   } catch (err) {
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : "Unknown BigQuery error" },
+      {
+        error: err instanceof Error ? err.message : "Unknown BigQuery error",
+        diagnostics: keyDiagnostics,
+      },
       { status: 500 }
     );
   }
