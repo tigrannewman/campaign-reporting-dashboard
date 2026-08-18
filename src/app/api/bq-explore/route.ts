@@ -14,8 +14,25 @@ export async function GET() {
     const looksLikeJson = raw.trim().startsWith("{");
     const decoded = looksLikeJson ? raw : Buffer.from(raw, "base64").toString("utf8");
     credentials = JSON.parse(decoded);
-  } catch {
-    return NextResponse.json({ error: "googleCloud env var is not valid JSON or base64-encoded JSON" }, { status: 500 });
+  } catch (parseErr) {
+    const decoded = raw.trim().startsWith("{") ? raw : Buffer.from(raw, "base64").toString("utf8");
+    return NextResponse.json(
+      {
+        error: "googleCloud env var is not valid JSON or base64-encoded JSON",
+        diagnostics: {
+          rawLength: raw.length,
+          rawTrimmedLength: raw.trim().length,
+          rawStartsWithBrace: raw.trim().startsWith("{"),
+          rawFirstChar: JSON.stringify(raw.slice(0, 1)),
+          rawLastChar: JSON.stringify(raw.slice(-1)),
+          decodedLength: decoded.length,
+          decodedStartsWithBrace: decoded.trim().startsWith("{"),
+          decodedFirst20: JSON.stringify(decoded.slice(0, 20)),
+          parseErrorMessage: parseErr instanceof Error ? parseErr.message : String(parseErr),
+        },
+      },
+      { status: 500 }
+    );
   }
 
   if (!credentials.private_key || !credentials.project_id) {
