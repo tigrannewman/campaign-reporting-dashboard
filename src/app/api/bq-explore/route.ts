@@ -4,16 +4,18 @@ import { initBigQuery } from "@/lib/bigquery";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const clientEmail = process.env.BQ_CLIENT_EMAIL;
-  const privateKey = process.env.BQ_PRIVATE_KEY;
+  const clientEmail = process.env.clientEmail;
+  const privateKey = process.env.privateKey;
+  const projectId = process.env.projectID;
 
-  if (!clientEmail || !privateKey) {
+  if (!clientEmail || !privateKey || !projectId) {
     return NextResponse.json(
       {
-        error: "BQ_CLIENT_EMAIL or BQ_PRIVATE_KEY env var is not set",
+        error: "clientEmail, privateKey, or projectID env var is not set",
         diagnostics: {
           hasClientEmail: Boolean(clientEmail),
           hasPrivateKey: Boolean(privateKey),
+          hasProjectId: Boolean(projectId),
         },
       },
       { status: 500 }
