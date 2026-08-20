@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import PrelaunchLogo from "./PrelaunchLogo";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -19,12 +20,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-20 border-b border-black/10 bg-white/90 backdrop-blur dark:border-white/10 dark:bg-black/80">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-indigo-600 text-sm font-bold text-white">
-            P
-          </div>
-          <span className="text-lg font-semibold tracking-tight">Prelaunch</span>
-        </div>
+        <PrelaunchLogo className="h-7 w-auto text-black dark:text-white" />
 
         <div ref={menuRef} className="relative">
           <button
