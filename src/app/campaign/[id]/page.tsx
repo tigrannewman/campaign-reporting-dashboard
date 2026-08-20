@@ -84,38 +84,6 @@ export default async function CampaignPage({
         </div>
       </div>
 
-      <TableCard title="Ad Angles">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr>
-              <Th>Ad Angle</Th>
-              <Th>Spends</Th>
-              <Th>Impressions</Th>
-              <Th>Clicks</Th>
-              <Th>CTR (%)</Th>
-              <Th>Visitors</Th>
-              <Th>Subscriptions</Th>
-            </tr>
-          </thead>
-          <tbody>
-            {campaign.adSets.map((row) => (
-              <tr
-                key={row.adAngle}
-                className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
-              >
-                <Td>{row.adAngle}</Td>
-                <Td>{fmtCurrency(row.spend)}</Td>
-                <Td>{fmtNumber(row.impressions)}</Td>
-                <Td>{fmtNumber(row.clicks)}</Td>
-                <Td>{fmtPercent(row.ctr)}</Td>
-                <Td>{fmtNumber(row.visitors)}</Td>
-                <Td>{fmtNumber(row.subscriptions)}</Td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </TableCard>
-
       <div>
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-400">
           Demographics

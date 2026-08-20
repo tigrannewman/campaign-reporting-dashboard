@@ -13,16 +13,6 @@ export type Metrics = {
   dms: number;
 };
 
-export type AdSetRow = {
-  adAngle: string;
-  spend: number;
-  impressions: number;
-  clicks: number;
-  ctr: number;
-  visitors: number;
-  subscriptions: number;
-};
-
 export type AngleShare = {
   label: string;
   value: number; // %
@@ -64,7 +54,6 @@ export type Campaign = {
   id: string;
   name: string;
   metrics: Metrics;
-  adSets: AdSetRow[];
   demographicsCharts: DemographicsCharts;
   surveyResponses: SurveyResponseRow[];
   bigQuery?: {
@@ -93,11 +82,6 @@ export const campaigns: Campaign[] = [
       shares: 312,
       dms: 89,
     },
-    adSets: [
-      { adAngle: "Problem/Solution", spend: 1420, impressions: 178000, clicks: 4120, ctr: 2.3, visitors: 3710, subscriptions: 115 },
-      { adAngle: "Social Proof", spend: 1680, impressions: 195000, clicks: 4980, ctr: 2.55, visitors: 4480, subscriptions: 139 },
-      { adAngle: "Urgency/Scarcity", spend: 1150, impressions: 139000, clicks: 3260, ctr: 2.35, visitors: 2930, subscriptions: 91 },
-    ],
     demographicsCharts: {
       angles: [
         { label: "Problem/Solution", value: 33, color: ANGLE_COLORS[0] },
@@ -164,11 +148,6 @@ export const campaigns: Campaign[] = [
       shares: 245,
       dms: 61,
     },
-    adSets: [
-      { adAngle: "Testimonial", spend: 1210, impressions: 152000, clicks: 3040, ctr: 2.0, visitors: 2736, subscriptions: 71 },
-      { adAngle: "Before/After", spend: 1340, impressions: 168000, clicks: 3610, ctr: 2.15, visitors: 3249, subscriptions: 84 },
-      { adAngle: "Limited Offer", spend: 1130, impressions: 147000, clicks: 3120, ctr: 2.12, visitors: 2808, subscriptions: 73 },
-    ],
     demographicsCharts: {
       angles: [
         { label: "Testimonial", value: 33, color: ANGLE_COLORS[0] },
@@ -231,11 +210,6 @@ export const campaigns: Campaign[] = [
       shares: 402,
       dms: 122,
     },
-    adSets: [
-      { adAngle: "Educational", spend: 1780, impressions: 210000, clicks: 5460, ctr: 2.6, visitors: 4914, subscriptions: 167 },
-      { adAngle: "Social Proof", spend: 1920, impressions: 224000, clicks: 6270, ctr: 2.8, visitors: 5643, subscriptions: 192 },
-      { adAngle: "Founder Story", spend: 1420, impressions: 167000, clicks: 4510, ctr: 2.7, visitors: 4059, subscriptions: 138 },
-    ],
     demographicsCharts: {
       angles: [
         { label: "Educational", value: 35, color: ANGLE_COLORS[0] },
@@ -298,11 +272,6 @@ export const campaigns: Campaign[] = [
       shares: 168,
       dms: 44,
     },
-    adSets: [
-      { adAngle: "Urgency/Scarcity", spend: 980, impressions: 128000, clicks: 2380, ctr: 1.86, visitors: 2142, subscriptions: 47 },
-      { adAngle: "Testimonial", spend: 1050, impressions: 135000, clicks: 2610, ctr: 1.93, visitors: 2349, subscriptions: 52 },
-      { adAngle: "Comparison", spend: 950, impressions: 126000, clicks: 2390, ctr: 1.9, visitors: 2151, subscriptions: 47 },
-    ],
     demographicsCharts: {
       angles: [
         { label: "Urgency/Scarcity", value: 33, color: ANGLE_COLORS[0] },
@@ -365,11 +334,6 @@ export const campaigns: Campaign[] = [
       shares: 587,
       dms: 176,
     },
-    adSets: [
-      { adAngle: "Social Proof", spend: 2140, impressions: 245000, clicks: 7420, ctr: 3.03, visitors: 6678, subscriptions: 254 },
-      { adAngle: "Founder Story", spend: 2280, impressions: 258000, clicks: 7940, ctr: 3.08, visitors: 7146, subscriptions: 272 },
-      { adAngle: "Before/After", spend: 1920, impressions: 212000, clicks: 6180, ctr: 2.92, visitors: 5562, subscriptions: 211 },
-    ],
     demographicsCharts: {
       angles: [
         { label: "Social Proof", value: 34, color: ANGLE_COLORS[0] },
