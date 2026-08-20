@@ -7,6 +7,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientId: process.env.COGNITO_CLIENT_ID,
       clientSecret: process.env.COGNITO_CLIENT_SECRET,
       issuer: process.env.COGNITO_ISSUER,
+      authorization: { params: { scope: "openid email" } },
     }),
   ],
   session: {
