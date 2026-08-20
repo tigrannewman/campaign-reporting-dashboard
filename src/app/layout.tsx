@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Header from "@/components/Header";
 import CampaignChips from "@/components/CampaignChips";
+import { auth } from "@/auth";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,14 +20,16 @@ export const metadata: Metadata = {
   description: "Concept performance reporting dashboard",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const session = await auth();
+
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <Header />
+        <Header user={session?.user} />
         <div className="mx-auto w-full max-w-7xl">
           <CampaignChips />
         </div>

@@ -2,8 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import PrelaunchLogo from "./PrelaunchLogo";
+import { signOutAction } from "@/lib/actions";
 
-export default function Header() {
+export default function Header({
+  user,
+}: {
+  user?: { name?: string | null; email?: string | null };
+}) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -35,16 +40,23 @@ export default function Header() {
 
           {open && (
             <div className="absolute right-0 mt-2 w-56 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg">
-              <div className="border-b border-slate-100 px-4 py-3">
-                <p className="text-sm font-medium text-slate-900">Tigran</p>
-                <p className="truncate text-xs text-slate-500">tigran@prelaunch.com</p>
-              </div>
+              {(user?.name || user?.email) && (
+                <div className="border-b border-slate-100 px-4 py-3">
+                  {user?.name && <p className="text-sm font-medium text-slate-900">{user.name}</p>}
+                  {user?.email && <p className="truncate text-xs text-slate-500">{user.email}</p>}
+                </div>
+              )}
               <button className="w-full px-4 py-2 text-left text-sm text-slate-600 transition hover:bg-slate-50">
                 Profile
               </button>
-              <button className="w-full px-4 py-2 text-left text-sm text-red-600 transition hover:bg-red-50">
-                Logout
-              </button>
+              <form action={signOutAction}>
+                <button
+                  type="submit"
+                  className="w-full px-4 py-2 text-left text-sm text-red-600 transition hover:bg-red-50"
+                >
+                  Logout
+                </button>
+              </form>
             </div>
           )}
         </div>
