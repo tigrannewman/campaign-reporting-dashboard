@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Header from "@/components/Header";
-import CampaignChips from "@/components/CampaignChips";
-import { auth } from "@/auth";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -20,22 +17,14 @@ export const metadata: Metadata = {
   description: "Concept performance reporting dashboard",
 };
 
-export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const session = await auth();
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <Header user={session?.user} />
-        <div className="mx-auto w-full max-w-7xl">
-          <CampaignChips />
-        </div>
-        <main className="mx-auto w-full max-w-7xl flex-1 px-4 pb-12 sm:px-6">
-          {children}
-        </main>
+        {children}
       </body>
     </html>
   );
