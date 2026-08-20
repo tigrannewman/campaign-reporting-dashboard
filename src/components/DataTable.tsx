@@ -2,16 +2,19 @@ import { ReactNode } from "react";
 
 export function TableCard({
   title,
+  badge,
   children,
 }: {
   title?: string;
+  badge?: ReactNode;
   children: ReactNode;
 }) {
   return (
     <div className="overflow-hidden rounded-xl border border-black/10 bg-white shadow-sm dark:border-white/10 dark:bg-neutral-900">
       {title && (
-        <div className="border-b border-black/10 px-5 py-3 dark:border-white/10">
+        <div className="flex items-center justify-between gap-3 border-b border-black/10 px-5 py-3 dark:border-white/10">
           <h2 className="text-sm font-semibold text-black/80 dark:text-white/80">{title}</h2>
+          {badge}
         </div>
       )}
       <div className="overflow-x-auto">{children}</div>

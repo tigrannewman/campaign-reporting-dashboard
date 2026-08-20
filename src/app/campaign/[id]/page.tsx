@@ -6,6 +6,11 @@ import StatCard from "@/components/StatCard";
 import DonutChart from "@/components/charts/DonutChart";
 import AgeGenderPyramid from "@/components/charts/AgeGenderPyramid";
 import HorizontalBars from "@/components/charts/HorizontalBars";
+import LiveBadge from "@/components/LiveBadge";
+import { getMetaAdsAngles, getMetaAdsDemographics } from "@/lib/bigquery";
+import { anglesToChartData, demographicsToAgeGender } from "@/lib/liveTransforms";
+
+export const revalidate = 60;
 
 export function generateStaticParams() {
   return campaigns.map((c) => ({ id: c.id }));
@@ -21,6 +26,31 @@ export default async function CampaignPage({
   if (!campaign) notFound();
 
   const { metrics } = campaign;
+
+  let angles = campaign.demographicsCharts.angles;
+  let ageGender = campaign.demographicsCharts.ageGender;
+  let anglesIsLive = false;
+  let ageGenderIsLive = false;
+
+  if (campaign.bigQuery) {
+    const { projectIdeaId, versionIds } = campaign.bigQuery;
+    try {
+      const [angleRows, demoRows] = await Promise.all([
+        getMetaAdsAngles(projectIdeaId, versionIds),
+        getMetaAdsDemographics(projectIdeaId, versionIds),
+      ]);
+      if (angleRows.length > 0) {
+        angles = anglesToChartData(angleRows);
+        anglesIsLive = true;
+      }
+      if (demoRows.length > 0) {
+        ageGender = demographicsToAgeGender(demoRows);
+        ageGenderIsLive = true;
+      }
+    } catch (err) {
+      console.error("BigQuery live fetch failed, falling back to placeholder data:", err);
+    }
+  }
 
   return (
     <div className="flex flex-col gap-8 pt-2">
@@ -91,14 +121,14 @@ export default async function CampaignPage({
           Demographics
         </h2>
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <TableCard title="Angle">
+          <TableCard title="Angle" badge={anglesIsLive ? <LiveBadge /> : undefined}>
             <div className="p-5">
-              <DonutChart segments={campaign.demographicsCharts.angles} />
+              <DonutChart segments={angles} />
             </div>
           </TableCard>
-          <TableCard title="Age and Gender">
+          <TableCard title="Age and Gender" badge={ageGenderIsLive ? <LiveBadge /> : undefined}>
             <div className="p-5">
-              <AgeGenderPyramid rows={campaign.demographicsCharts.ageGender} />
+              <AgeGenderPyramid rows={ageGender} />
             </div>
           </TableCard>
           <TableCard title="Country">

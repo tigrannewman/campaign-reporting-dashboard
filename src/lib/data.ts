@@ -67,6 +67,10 @@ export type Campaign = {
   adSets: AdSetRow[];
   demographicsCharts: DemographicsCharts;
   surveyResponses: SurveyResponseRow[];
+  bigQuery?: {
+    projectIdeaId: string;
+    versionIds: string[];
+  };
 };
 
 const ANGLE_COLORS = ["#3b82f6", "#f43f5e", "#14b8a6"];
@@ -138,6 +142,10 @@ export const campaigns: Campaign[] = [
       { question: "What made you sign up?", answer: "Pricing", respondents: 160, percentage: 32 },
       { question: "What made you sign up?", answer: "Product Features", respondents: 140, percentage: 28 },
     ],
+    bigQuery: {
+      projectIdeaId: "e6843bbb-e6b8-4d97-bb59-9c6bedefec9d",
+      versionIds: ["8cd76909-f3d4-4a8f-82dc-209a469bb0a6"],
+    },
   },
   {
     id: "campaign-2",
