@@ -18,7 +18,7 @@ export default function AgeGenderPyramid({ rows }: { rows: Row[] }) {
     <div className="flex flex-col gap-1">
       <div className="grid grid-cols-[56px_minmax(0,1fr)] gap-3">
         <span />
-        <div className="flex justify-between text-[11px] text-black/40 dark:text-white/40">
+        <div className="flex justify-between text-[11px] text-slate-400">
           <span>{max}%</span>
           <span>0%</span>
           <span>{max}%</span>
@@ -27,9 +27,9 @@ export default function AgeGenderPyramid({ rows }: { rows: Row[] }) {
 
       {rows.map((r) => (
         <div key={r.range} className="grid grid-cols-[56px_minmax(0,1fr)] items-center gap-3 text-sm">
-          <span className="text-right text-black/60 dark:text-white/60">{r.range}</span>
+          <span className="text-right text-slate-500">{r.range}</span>
           <div className="relative h-5">
-            <div className="absolute inset-y-0 left-1/2 h-full w-px bg-black/10 dark:bg-white/10" />
+            <div className="absolute inset-y-0 left-1/2 h-full w-px bg-slate-200" />
             <div className="absolute inset-y-0 left-0 flex h-full w-1/2 justify-end overflow-hidden">
               <div
                 className="h-full rounded-l bg-rose-300"
@@ -38,7 +38,7 @@ export default function AgeGenderPyramid({ rows }: { rows: Row[] }) {
             </div>
             <div className="absolute inset-y-0 right-0 flex h-full w-1/2 justify-start overflow-hidden">
               <div
-                className="h-full rounded-r bg-blue-400"
+                className="h-full rounded-r bg-teal-500"
                 style={{ width: `${max > 0 ? (r.men / max) * 100 : 0}%` }}
               />
             </div>
@@ -52,7 +52,7 @@ export default function AgeGenderPyramid({ rows }: { rows: Row[] }) {
         </div>
       ))}
 
-      <div className="mt-2 flex items-center justify-center gap-4 text-xs text-black/50 dark:text-white/50">
+      <div className="mt-2 flex items-center justify-center gap-4 text-xs text-slate-500">
         <span className="flex items-center gap-1.5">
           <span className="h-2.5 w-2.5 rounded-sm bg-rose-300" /> Women
         </span>
@@ -60,7 +60,7 @@ export default function AgeGenderPyramid({ rows }: { rows: Row[] }) {
           <span className="h-2.5 w-2.5 rounded-sm bg-slate-300" /> Unknown
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm bg-blue-400" /> Man
+          <span className="h-2.5 w-2.5 rounded-sm bg-teal-500" /> Man
         </span>
       </div>
     </div>

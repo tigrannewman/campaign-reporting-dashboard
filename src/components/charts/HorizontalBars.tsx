@@ -11,7 +11,7 @@ function niceCeil(n: number) {
 
 export default function HorizontalBars({
   rows,
-  color = "#3b82f6",
+  color = "#0d9488",
 }: {
   rows: Row[];
   color?: string;
@@ -24,8 +24,8 @@ export default function HorizontalBars({
     <div className="flex flex-col gap-2.5">
       {rows.map((r) => (
         <div key={r.label} className="grid grid-cols-[minmax(0,1fr)_minmax(0,2.2fr)] items-center gap-3 text-sm">
-          <span className="truncate text-black/70 dark:text-white/70">{r.label}</span>
-          <div className="relative h-5 rounded bg-black/[0.04] dark:bg-white/[0.06]">
+          <span className="truncate text-slate-600">{r.label}</span>
+          <div className="relative h-5 rounded bg-slate-100">
             <div
               className="h-full rounded"
               style={{ width: `${max > 0 ? (r.value / max) * 100 : 0}%`, backgroundColor: color }}
@@ -35,7 +35,7 @@ export default function HorizontalBars({
       ))}
       <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,2.2fr)] gap-3 pt-1">
         <span />
-        <div className="flex justify-between text-[11px] text-black/40 dark:text-white/40">
+        <div className="flex justify-between text-[11px] text-slate-400">
           {ticks.map((t, i) => (
             <span key={i}>{t}%</span>
           ))}

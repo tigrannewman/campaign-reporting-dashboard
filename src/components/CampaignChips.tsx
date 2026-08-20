@@ -22,8 +22,8 @@ export default function CampaignChips() {
             href={item.href}
             className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
               active
-                ? "bg-indigo-600 text-white"
-                : "bg-black/5 text-black/70 hover:bg-black/10 dark:bg-white/10 dark:text-white/70 dark:hover:bg-white/15"
+                ? "bg-accent text-white"
+                : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
             }`}
           >
             {item.label}

@@ -55,8 +55,8 @@ export default async function CampaignPage({
   return (
     <div className="flex flex-col gap-8 pt-2">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{campaign.name}</h1>
-        <p className="mt-1 text-sm text-black/50 dark:text-white/50">
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">{campaign.name}</h1>
+        <p className="mt-1 text-sm text-slate-500">
           Individual performance metrics and reporting for this concept.
         </p>
       </div>
@@ -74,7 +74,7 @@ export default async function CampaignPage({
       </div>
 
       <div>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-black/50 dark:text-white/50">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-400">
           Engagement Metrics
         </h2>
         <div className="grid grid-cols-3 gap-3">
@@ -87,7 +87,7 @@ export default async function CampaignPage({
       <TableCard title="Ad Angles">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="border-b border-black/10 dark:border-white/10">
+            <tr>
               <Th>Ad Angle</Th>
               <Th>Spends</Th>
               <Th>Impressions</Th>
@@ -101,7 +101,7 @@ export default async function CampaignPage({
             {campaign.adSets.map((row) => (
               <tr
                 key={row.adAngle}
-                className="border-b border-black/5 last:border-0 hover:bg-black/[0.02] dark:border-white/5 dark:hover:bg-white/[0.03]"
+                className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
               >
                 <Td>{row.adAngle}</Td>
                 <Td>{fmtCurrency(row.spend)}</Td>
@@ -117,7 +117,7 @@ export default async function CampaignPage({
       </TableCard>
 
       <div>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-black/50 dark:text-white/50">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-400">
           Demographics
         </h2>
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -147,7 +147,7 @@ export default async function CampaignPage({
       <TableCard title="Survey Responses">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="border-b border-black/10 dark:border-white/10">
+            <tr>
               <Th>Question</Th>
               <Th>Answer</Th>
               <Th>Respondents</Th>
@@ -158,7 +158,7 @@ export default async function CampaignPage({
             {campaign.surveyResponses.map((row, i) => (
               <tr
                 key={i}
-                className="border-b border-black/5 last:border-0 hover:bg-black/[0.02] dark:border-white/5 dark:hover:bg-white/[0.03]"
+                className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
               >
                 <Td>{row.question}</Td>
                 <Td>{row.answer}</Td>

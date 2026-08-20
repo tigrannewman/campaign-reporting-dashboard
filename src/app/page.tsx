@@ -9,8 +9,8 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-6 pt-2">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">All Concepts</h1>
-        <p className="mt-1 text-sm text-black/50 dark:text-white/50">
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">All Concepts</h1>
+        <p className="mt-1 text-sm text-slate-500">
           Performance overview across all active concepts.
         </p>
       </div>
@@ -18,7 +18,7 @@ export default function Home() {
       <TableCard>
         <table className="w-full border-collapse">
           <thead>
-            <tr className="border-b border-black/10 dark:border-white/10">
+            <tr>
               <Th>Concept</Th>
               <Th>Spends</Th>
               <Th>Impressions</Th>
@@ -38,10 +38,10 @@ export default function Home() {
             {campaigns.map((c) => (
               <tr
                 key={c.id}
-                className="border-b border-black/5 last:border-0 hover:bg-black/[0.02] dark:border-white/5 dark:hover:bg-white/[0.03]"
+                className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
               >
                 <Td>
-                  <Link href={`/campaign/${c.id}`} className="font-medium text-indigo-600 hover:underline dark:text-indigo-400">
+                  <Link href={`/campaign/${c.id}`} className="font-medium text-accent hover:text-teal-700 hover:underline">
                     {c.name}
                   </Link>
                 </Td>
@@ -59,7 +59,7 @@ export default function Home() {
                 <Td>{fmtNumber(c.metrics.dms)}</Td>
               </tr>
             ))}
-            <tr className="border-t-2 border-black/10 bg-black/[0.02] font-semibold dark:border-white/10 dark:bg-white/[0.04]">
+            <tr className="border-t-2 border-slate-200 bg-slate-50 font-semibold">
               <Td>Total / Avg</Td>
               <Td>{fmtCurrency(totals.adSpend)}</Td>
               <Td>{fmtNumber(totals.impressions)}</Td>
