@@ -20,24 +20,30 @@ export async function loginAction(_prevState: LoginState, formData: FormData): P
   let result;
   try {
     result = await initiateCognitoAuth(email, password);
+    console.log("[login] initiateCognitoAuth status:", result.status);
   } catch (err) {
-    console.error("Cognito login failed:", err);
+    console.error("[login] initiateCognitoAuth threw:", err);
     return { error: "Invalid email or password." };
   }
 
   if (result.status === "challenge") {
     if (result.challengeName !== "NEW_PASSWORD_REQUIRED") {
+      console.log("[login] unsupported challenge:", result.challengeName);
       return { error: "This account requires additional setup. Contact your administrator." };
     }
     return { challenge: "NEW_PASSWORD_REQUIRED", email, session: result.session };
   }
 
   try {
+    console.log("[login] calling signIn for", email);
     await signIn("credentials", { email, password, redirectTo: "/" });
+    console.log("[login] signIn returned without redirecting (unexpected)");
   } catch (error) {
     if (error instanceof AuthError) {
+      console.error("[login] signIn threw AuthError:", error.type, error.message);
       return { error: "Invalid email or password." };
     }
+    console.log("[login] signIn threw non-AuthError (likely the redirect signal):", error instanceof Error ? error.message : error);
     throw error;
   }
 }
