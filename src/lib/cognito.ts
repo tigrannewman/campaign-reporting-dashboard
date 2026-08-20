@@ -1,4 +1,8 @@
-import { CognitoIdentityProviderClient, InitiateAuthCommand } from "@aws-sdk/client-cognito-identity-provider";
+import {
+  CognitoIdentityProviderClient,
+  InitiateAuthCommand,
+  RespondToAuthChallengeCommand,
+} from "@aws-sdk/client-cognito-identity-provider";
 import crypto from "crypto";
 
 function getRegion() {
@@ -25,15 +29,26 @@ function decodeIdTokenPayload(idToken: string) {
   return JSON.parse(json) as { sub: string; email?: string; name?: string };
 }
 
-export async function authenticateWithCognito(email: string, password: string) {
+function getClient() {
+  return new CognitoIdentityProviderClient({ region: getRegion() });
+}
+
+function requireClientId() {
   const clientId = process.env.COGNITO_CLIENT_ID;
   if (!clientId) {
     throw new Error("COGNITO_CLIENT_ID env var is not set");
   }
+  return clientId;
+}
 
-  const client = new CognitoIdentityProviderClient({ region: getRegion() });
+export type CognitoAuthResult =
+  | { status: "success"; user: { id: string; email?: string; name?: string } }
+  | { status: "challenge"; challengeName: string; session: string };
 
-  const response = await client.send(
+export async function initiateCognitoAuth(email: string, password: string): Promise<CognitoAuthResult> {
+  const clientId = requireClientId();
+
+  const response = await getClient().send(
     new InitiateAuthCommand({
       AuthFlow: "USER_PASSWORD_AUTH",
       ClientId: clientId,
@@ -46,7 +61,10 @@ export async function authenticateWithCognito(email: string, password: string) {
   );
 
   if (response.ChallengeName) {
-    throw new Error(`Additional step required: ${response.ChallengeName}`);
+    if (!response.Session) {
+      throw new Error("Cognito returned a challenge with no session token");
+    }
+    return { status: "challenge", challengeName: response.ChallengeName, session: response.Session };
   }
 
   const idToken = response.AuthenticationResult?.IdToken;
@@ -55,10 +73,33 @@ export async function authenticateWithCognito(email: string, password: string) {
   }
 
   const payload = decodeIdTokenPayload(idToken);
-
   return {
-    id: payload.sub,
-    email: payload.email,
-    name: payload.name ?? payload.email,
+    status: "success",
+    user: { id: payload.sub, email: payload.email, name: payload.name ?? payload.email },
   };
+}
+
+export async function completeNewPasswordChallenge(email: string, newPassword: string, session: string) {
+  const clientId = requireClientId();
+
+  await getClient().send(
+    new RespondToAuthChallengeCommand({
+      ClientId: clientId,
+      ChallengeName: "NEW_PASSWORD_REQUIRED",
+      Session: session,
+      ChallengeResponses: {
+        USERNAME: email,
+        NEW_PASSWORD: newPassword,
+        SECRET_HASH: secretHash(email),
+      },
+    })
+  );
+}
+
+export async function authenticateWithCognito(email: string, password: string) {
+  const result = await initiateCognitoAuth(email, password);
+  if (result.status === "challenge") {
+    throw new Error(`Additional step required: ${result.challengeName}`);
+  }
+  return result.user;
 }
