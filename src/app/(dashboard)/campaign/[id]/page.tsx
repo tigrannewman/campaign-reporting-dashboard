@@ -8,7 +8,9 @@ import AgeGenderPyramid from "@/components/charts/AgeGenderPyramid";
 import HorizontalBars from "@/components/charts/HorizontalBars";
 import LiveBadge from "@/components/LiveBadge";
 import { getMetaAdsAngles, getMetaAdsDemographics } from "@/lib/bigquery";
-import { anglesToChartData, demographicsToAgeGender } from "@/lib/liveTransforms";
+import { anglesToChartData, demographicsToAgeGender, buildSurveyReport, type SurveyReport as SurveyReportData } from "@/lib/liveTransforms";
+import { getTypeformFields, getTypeformResponses } from "@/lib/typeform";
+import SurveyReport from "@/components/SurveyReport";
 
 export const revalidate = 60;
 
@@ -49,6 +51,19 @@ export default async function CampaignPage({
       }
     } catch (err) {
       console.error("BigQuery live fetch failed, falling back to placeholder data:", err);
+    }
+  }
+
+  let surveyReport: SurveyReportData | null = null;
+  if (campaign.typeform) {
+    try {
+      const [fields, { items }] = await Promise.all([
+        getTypeformFields(campaign.typeform.formId),
+        getTypeformResponses(campaign.typeform.formId),
+      ]);
+      surveyReport = buildSurveyReport(fields, items);
+    } catch (err) {
+      console.error("Typeform live fetch failed, falling back to placeholder data:", err);
     }
   }
 
@@ -112,31 +127,35 @@ export default async function CampaignPage({
         </div>
       </div>
 
-      <TableCard title="Survey Responses">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr>
-              <Th>Question</Th>
-              <Th>Answer</Th>
-              <Th>Respondents</Th>
-              <Th>%</Th>
-            </tr>
-          </thead>
-          <tbody>
-            {campaign.surveyResponses.map((row, i) => (
-              <tr
-                key={i}
-                className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
-              >
-                <Td>{row.question}</Td>
-                <Td>{row.answer}</Td>
-                <Td>{fmtNumber(row.respondents)}</Td>
-                <Td>{fmtPercent(row.percentage)}</Td>
+      {surveyReport ? (
+        <SurveyReport report={surveyReport} />
+      ) : (
+        <TableCard title="Survey Responses">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr>
+                <Th>Question</Th>
+                <Th>Answer</Th>
+                <Th>Respondents</Th>
+                <Th>%</Th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </TableCard>
+            </thead>
+            <tbody>
+              {campaign.surveyResponses.map((row, i) => (
+                <tr
+                  key={i}
+                  className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
+                >
+                  <Td>{row.question}</Td>
+                  <Td>{row.answer}</Td>
+                  <Td>{fmtNumber(row.respondents)}</Td>
+                  <Td>{fmtPercent(row.percentage)}</Td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </TableCard>
+      )}
     </div>
   );
 }

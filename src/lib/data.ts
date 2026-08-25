@@ -60,6 +60,9 @@ export type Campaign = {
     projectIdeaId: string;
     versionIds: string[];
   };
+  typeform?: {
+    formId: string;
+  };
 };
 
 const ANGLE_COLORS = ["#3b82f6", "#f43f5e", "#14b8a6"];
@@ -129,6 +132,9 @@ export const campaigns: Campaign[] = [
     bigQuery: {
       projectIdeaId: "e6843bbb-e6b8-4d97-bb59-9c6bedefec9d",
       versionIds: ["8cd76909-f3d4-4a8f-82dc-209a469bb0a6"],
+    },
+    typeform: {
+      formId: "CXXaDh7x",
     },
   },
   {

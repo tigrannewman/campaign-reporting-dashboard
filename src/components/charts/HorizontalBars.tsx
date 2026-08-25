@@ -12,9 +12,11 @@ function niceCeil(n: number) {
 export default function HorizontalBars({
   rows,
   color = "#0d9488",
+  unit = "%",
 }: {
   rows: Row[];
   color?: string;
+  unit?: string;
 }) {
   const max = niceCeil(Math.max(...rows.map((r) => r.value), 0));
   const tickCount = 6;
@@ -37,7 +39,7 @@ export default function HorizontalBars({
         <span />
         <div className="flex justify-between text-[11px] text-slate-400">
           {ticks.map((t, i) => (
-            <span key={i}>{t}%</span>
+            <span key={i}>{t}{unit}</span>
           ))}
         </div>
       </div>
