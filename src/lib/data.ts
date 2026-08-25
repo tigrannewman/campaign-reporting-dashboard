@@ -67,7 +67,7 @@ const ANGLE_COLORS = ["#3b82f6", "#f43f5e", "#14b8a6"];
 export const campaigns: Campaign[] = [
   {
     id: "campaign-1",
-    name: "Concept 1",
+    name: "Spectrum Keyboard",
     metrics: {
       adSpend: 4250,
       impressions: 512000,
@@ -133,7 +133,7 @@ export const campaigns: Campaign[] = [
   },
   {
     id: "campaign-2",
-    name: "Concept 2",
+    name: "Fusion Axis",
     metrics: {
       adSpend: 3680,
       impressions: 467000,
@@ -195,7 +195,7 @@ export const campaigns: Campaign[] = [
   },
   {
     id: "campaign-3",
-    name: "Concept 3",
+    name: "Genesis Modular Mouse System",
     metrics: {
       adSpend: 5120,
       impressions: 601000,
@@ -257,7 +257,7 @@ export const campaigns: Campaign[] = [
   },
   {
     id: "campaign-4",
-    name: "Concept 4",
+    name: "The BOX",
     metrics: {
       adSpend: 2980,
       impressions: 389000,
@@ -319,7 +319,7 @@ export const campaigns: Campaign[] = [
   },
   {
     id: "campaign-5",
-    name: "Concept 5",
+    name: "Serene Flow",
     metrics: {
       adSpend: 6340,
       impressions: 715000,
