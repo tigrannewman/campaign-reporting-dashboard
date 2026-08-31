@@ -1,16 +1,14 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { campaigns, getCampaign } from "@/lib/data";
 import { fmtCurrency, fmtNumber, fmtPercent } from "@/lib/format";
-import { TableCard, Th, Td } from "@/components/DataTable";
+import { TableCard } from "@/components/DataTable";
 import StatCard from "@/components/StatCard";
-import DonutChart from "@/components/charts/DonutChart";
-import AgeGenderPyramid from "@/components/charts/AgeGenderPyramid";
 import HorizontalBars from "@/components/charts/HorizontalBars";
-import LiveBadge from "@/components/LiveBadge";
-import { getMetaAdsAngles, getMetaAdsDemographics } from "@/lib/bigquery";
-import { anglesToChartData, demographicsToAgeGender, buildSurveyReport, type SurveyReport as SurveyReportData } from "@/lib/liveTransforms";
-import { getTypeformFields, getTypeformResponses } from "@/lib/typeform";
-import SurveyReport from "@/components/SurveyReport";
+import { ChartCardSkeleton, TableCardSkeleton } from "@/components/Skeleton";
+import AngleCard from "@/components/live/AngleCard";
+import AgeGenderCard from "@/components/live/AgeGenderCard";
+import SurveySection from "@/components/live/SurveySection";
 
 export const revalidate = 60;
 
@@ -28,44 +26,6 @@ export default async function CampaignPage({
   if (!campaign) notFound();
 
   const { metrics } = campaign;
-
-  let angles = campaign.demographicsCharts.angles;
-  let ageGender = campaign.demographicsCharts.ageGender;
-  let anglesIsLive = false;
-  let ageGenderIsLive = false;
-
-  if (campaign.bigQuery) {
-    const { projectIdeaId, versionIds } = campaign.bigQuery;
-    try {
-      const [angleRows, demoRows] = await Promise.all([
-        getMetaAdsAngles(projectIdeaId, versionIds),
-        getMetaAdsDemographics(projectIdeaId, versionIds),
-      ]);
-      if (angleRows.length > 0) {
-        angles = anglesToChartData(angleRows);
-        anglesIsLive = true;
-      }
-      if (demoRows.length > 0) {
-        ageGender = demographicsToAgeGender(demoRows);
-        ageGenderIsLive = true;
-      }
-    } catch (err) {
-      console.error("BigQuery live fetch failed, falling back to placeholder data:", err);
-    }
-  }
-
-  let surveyReport: SurveyReportData | null = null;
-  if (campaign.typeform) {
-    try {
-      const [fields, { items }] = await Promise.all([
-        getTypeformFields(campaign.typeform.formId),
-        getTypeformResponses(campaign.typeform.formId),
-      ]);
-      surveyReport = buildSurveyReport(fields, items);
-    } catch (err) {
-      console.error("Typeform live fetch failed, falling back to placeholder data:", err);
-    }
-  }
 
   return (
     <div className="flex flex-col gap-8 pt-2">
@@ -104,16 +64,12 @@ export default async function CampaignPage({
           Demographics
         </h2>
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <TableCard title="Angle" badge={anglesIsLive ? <LiveBadge /> : undefined}>
-            <div className="p-5">
-              <DonutChart segments={angles} />
-            </div>
-          </TableCard>
-          <TableCard title="Age and Gender" badge={ageGenderIsLive ? <LiveBadge /> : undefined}>
-            <div className="p-5">
-              <AgeGenderPyramid rows={ageGender} />
-            </div>
-          </TableCard>
+          <Suspense fallback={<ChartCardSkeleton title="Angle" />}>
+            <AngleCard campaign={campaign} />
+          </Suspense>
+          <Suspense fallback={<ChartCardSkeleton title="Age and Gender" />}>
+            <AgeGenderCard campaign={campaign} />
+          </Suspense>
           <TableCard title="Country">
             <div className="p-5">
               <HorizontalBars rows={campaign.demographicsCharts.countries.map((c) => ({ label: c.country, value: c.value }))} />
@@ -127,35 +83,9 @@ export default async function CampaignPage({
         </div>
       </div>
 
-      {surveyReport ? (
-        <SurveyReport report={surveyReport} />
-      ) : (
-        <TableCard title="Survey Responses">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr>
-                <Th>Question</Th>
-                <Th>Answer</Th>
-                <Th>Respondents</Th>
-                <Th>%</Th>
-              </tr>
-            </thead>
-            <tbody>
-              {campaign.surveyResponses.map((row, i) => (
-                <tr
-                  key={i}
-                  className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
-                >
-                  <Td>{row.question}</Td>
-                  <Td>{row.answer}</Td>
-                  <Td>{fmtNumber(row.respondents)}</Td>
-                  <Td>{fmtPercent(row.percentage)}</Td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </TableCard>
-      )}
+      <Suspense fallback={<TableCardSkeleton title="Survey Responses" rows={6} />}>
+        <SurveySection campaign={campaign} />
+      </Suspense>
     </div>
   );
 }
