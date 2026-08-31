@@ -95,7 +95,7 @@ export default async function CampaignPage({
         <div className="grid grid-cols-3 gap-3">
           <StatCard label="Likes" value={fmtNumber(metrics.likes)} />
           <StatCard label="Shares" value={fmtNumber(metrics.shares)} />
-          <StatCard label="DMs" value={fmtNumber(metrics.dms)} />
+          <StatCard label="Save" value={fmtNumber(metrics.saves)} />
         </div>
       </div>
 

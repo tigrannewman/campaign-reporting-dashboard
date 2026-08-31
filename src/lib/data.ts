@@ -10,7 +10,7 @@ export type Metrics = {
   costPerClick: number; // $ (CPC)
   likes: number;
   shares: number;
-  dms: number;
+  saves: number;
 };
 
 export type AngleShare = {
@@ -83,7 +83,7 @@ export const campaigns: Campaign[] = [
       costPerClick: 0.48,
       likes: 1240,
       shares: 312,
-      dms: 89,
+      saves: 89,
     },
     demographicsCharts: {
       angles: [
@@ -152,7 +152,7 @@ export const campaigns: Campaign[] = [
       costPerClick: 0.52,
       likes: 980,
       shares: 245,
-      dms: 61,
+      saves: 61,
     },
     demographicsCharts: {
       angles: [
@@ -214,7 +214,7 @@ export const campaigns: Campaign[] = [
       costPerClick: 0.44,
       likes: 1540,
       shares: 402,
-      dms: 122,
+      saves: 122,
     },
     demographicsCharts: {
       angles: [
@@ -276,7 +276,7 @@ export const campaigns: Campaign[] = [
       costPerClick: 0.56,
       likes: 740,
       shares: 168,
-      dms: 44,
+      saves: 44,
     },
     demographicsCharts: {
       angles: [
@@ -338,7 +338,7 @@ export const campaigns: Campaign[] = [
       costPerClick: 0.41,
       likes: 2010,
       shares: 587,
-      dms: 176,
+      saves: 176,
     },
     demographicsCharts: {
       angles: [
@@ -406,7 +406,7 @@ export function aggregateMetrics(): Metrics {
       acc.costPerClick += c.metrics.costPerClick;
       acc.likes += c.metrics.likes;
       acc.shares += c.metrics.shares;
-      acc.dms += c.metrics.dms;
+      acc.saves += c.metrics.saves;
       return acc;
     },
     {
@@ -421,7 +421,7 @@ export function aggregateMetrics(): Metrics {
       costPerClick: 0,
       likes: 0,
       shares: 0,
-      dms: 0,
+      saves: 0,
     }
   );
   return {

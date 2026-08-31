@@ -31,7 +31,7 @@ export default function Home() {
               <Th>CPM</Th>
               <Th>Likes</Th>
               <Th>Shares</Th>
-              <Th>DMs</Th>
+              <Th>Save</Th>
             </tr>
           </thead>
           <tbody>
@@ -56,7 +56,7 @@ export default function Home() {
                 <Td>{fmtCurrency(c.metrics.cpm)}</Td>
                 <Td>{fmtNumber(c.metrics.likes)}</Td>
                 <Td>{fmtNumber(c.metrics.shares)}</Td>
-                <Td>{fmtNumber(c.metrics.dms)}</Td>
+                <Td>{fmtNumber(c.metrics.saves)}</Td>
               </tr>
             ))}
             <tr className="border-t-2 border-slate-200 bg-slate-50 font-semibold">
@@ -72,7 +72,7 @@ export default function Home() {
               <Td>{fmtCurrency(totals.cpm)}</Td>
               <Td>{fmtNumber(totals.likes)}</Td>
               <Td>{fmtNumber(totals.shares)}</Td>
-              <Td>{fmtNumber(totals.dms)}</Td>
+              <Td>{fmtNumber(totals.saves)}</Td>
             </tr>
           </tbody>
         </table>
