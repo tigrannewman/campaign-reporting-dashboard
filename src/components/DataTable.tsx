@@ -22,7 +22,10 @@ export function TableCard({
   );
 }
 
-const STICKY_EDGE = "border-r border-slate-200 shadow-[3px_0_6px_-3px_rgba(0,0,0,0.12)]";
+// `border` doesn't reliably stay attached to a sticky table cell while
+// scrolling under border-collapse, so the frozen edge is faked with an
+// inset box-shadow (a solid line plus a soft drop shadow) instead.
+const STICKY_EDGE = "shadow-[inset_-1px_0_0_0_#cbd5e1,3px_0_6px_-3px_rgba(0,0,0,0.12)]";
 
 export function Th({ children, sticky }: { children: ReactNode; sticky?: boolean }) {
   return (
