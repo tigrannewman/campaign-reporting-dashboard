@@ -8,7 +8,7 @@ import HorizontalBars from "@/components/charts/HorizontalBars";
 import { ChartCardSkeleton, TableCardSkeleton } from "@/components/Skeleton";
 import AngleCard from "@/components/live/AngleCard";
 import AgeGenderCard from "@/components/live/AgeGenderCard";
-import SurveySection from "@/components/live/SurveySection";
+import SurveyInsightsSection from "@/components/live/SurveyInsightsSection";
 
 export const revalidate = 60;
 
@@ -83,9 +83,14 @@ export default async function CampaignPage({
         </div>
       </div>
 
-      <Suspense fallback={<TableCardSkeleton title="Survey Responses" rows={6} />}>
-        <SurveySection campaign={campaign} />
-      </Suspense>
+      <div>
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-400">
+          Survey Insights
+        </h2>
+        <Suspense fallback={<TableCardSkeleton title="Survey Responses" rows={6} />}>
+          <SurveyInsightsSection campaign={campaign} />
+        </Suspense>
+      </div>
     </div>
   );
 }

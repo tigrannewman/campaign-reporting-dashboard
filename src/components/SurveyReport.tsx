@@ -5,7 +5,7 @@ import LiveBadge from "@/components/LiveBadge";
 import { fmtNumber } from "@/lib/format";
 import type { SurveyReport as SurveyReportData } from "@/lib/liveTransforms";
 
-export default function SurveyReport({ report }: { report: SurveyReportData }) {
+export default function SurveyReport({ report, isLive = false }: { report: SurveyReportData; isLive?: boolean }) {
   return (
     <div className="flex flex-col gap-4">
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -25,7 +25,7 @@ export default function SurveyReport({ report }: { report: SurveyReportData }) {
       {report.priceDistribution && report.numericField && (
         <TableCard
           title={`${report.numericField.title} — Distribution`}
-          badge={<LiveBadge />}
+          badge={isLive ? <LiveBadge /> : undefined}
         >
           <div className="p-5">
             <HorizontalBars rows={report.priceDistribution} unit="" />
@@ -33,7 +33,7 @@ export default function SurveyReport({ report }: { report: SurveyReportData }) {
         </TableCard>
       )}
 
-      <TableCard title="Survey Responses" badge={<LiveBadge />}>
+      <TableCard title="Survey Responses" badge={isLive ? <LiveBadge /> : undefined}>
         <div className="max-h-[600px] overflow-y-auto">
           <table className="w-full border-collapse">
             <thead>

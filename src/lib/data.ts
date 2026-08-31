@@ -43,25 +43,18 @@ export type DemographicsCharts = {
   interests: InterestShare[];
 };
 
-export type SurveyResponseRow = {
-  question: string;
-  answer: string;
-  respondents: number;
-  percentage: number;
-};
-
 export type Campaign = {
   id: string;
   name: string;
   metrics: Metrics;
   demographicsCharts: DemographicsCharts;
-  surveyResponses: SurveyResponseRow[];
   bigQuery?: {
     projectIdeaId: string;
     versionIds: string[];
   };
   typeform?: {
-    formId: string;
+    visitorsFormId?: string;
+    subscribersFormId?: string;
   };
 };
 
@@ -123,18 +116,12 @@ export const campaigns: Campaign[] = [
         { label: "EU", value: 1.0 },
       ],
     },
-    surveyResponses: [
-      { question: "How did you hear about us?", answer: "Instagram Ad", respondents: 210, percentage: 42 },
-      { question: "How did you hear about us?", answer: "Friend/Referral", respondents: 95, percentage: 19 },
-      { question: "What made you sign up?", answer: "Pricing", respondents: 160, percentage: 32 },
-      { question: "What made you sign up?", answer: "Product Features", respondents: 140, percentage: 28 },
-    ],
     bigQuery: {
       projectIdeaId: "e6843bbb-e6b8-4d97-bb59-9c6bedefec9d",
       versionIds: ["8cd76909-f3d4-4a8f-82dc-209a469bb0a6"],
     },
     typeform: {
-      formId: "CXXaDh7x",
+      visitorsFormId: "CXXaDh7x",
     },
   },
   {
@@ -192,12 +179,6 @@ export const campaigns: Campaign[] = [
         { label: "EU", value: 1.3 },
       ],
     },
-    surveyResponses: [
-      { question: "How did you hear about us?", answer: "Facebook Ad", respondents: 175, percentage: 38 },
-      { question: "How did you hear about us?", answer: "Google Search", respondents: 120, percentage: 26 },
-      { question: "What made you sign up?", answer: "Reviews/Testimonials", respondents: 130, percentage: 30 },
-      { question: "What made you sign up?", answer: "Limited-Time Offer", respondents: 110, percentage: 24 },
-    ],
   },
   {
     id: "campaign-3",
@@ -254,12 +235,6 @@ export const campaigns: Campaign[] = [
         { label: "EU", value: 0.9 },
       ],
     },
-    surveyResponses: [
-      { question: "How did you hear about us?", answer: "TikTok Ad", respondents: 260, percentage: 45 },
-      { question: "How did you hear about us?", answer: "Instagram Ad", respondents: 150, percentage: 26 },
-      { question: "What made you sign up?", answer: "Product Features", respondents: 200, percentage: 35 },
-      { question: "What made you sign up?", answer: "Pricing", respondents: 170, percentage: 30 },
-    ],
   },
   {
     id: "campaign-4",
@@ -316,12 +291,6 @@ export const campaigns: Campaign[] = [
         { label: "EU", value: 1.5 },
       ],
     },
-    surveyResponses: [
-      { question: "How did you hear about us?", answer: "Google Search", respondents: 105, percentage: 33 },
-      { question: "How did you hear about us?", answer: "Friend/Referral", respondents: 90, percentage: 28 },
-      { question: "What made you sign up?", answer: "Limited-Time Offer", respondents: 88, percentage: 27 },
-      { question: "What made you sign up?", answer: "Reviews/Testimonials", respondents: 80, percentage: 25 },
-    ],
   },
   {
     id: "campaign-5",
@@ -378,12 +347,6 @@ export const campaigns: Campaign[] = [
         { label: "EU", value: 0.8 },
       ],
     },
-    surveyResponses: [
-      { question: "How did you hear about us?", answer: "Instagram Ad", respondents: 340, percentage: 44 },
-      { question: "How did you hear about us?", answer: "TikTok Ad", respondents: 220, percentage: 28 },
-      { question: "What made you sign up?", answer: "Product Features", respondents: 260, percentage: 34 },
-      { question: "What made you sign up?", answer: "Reviews/Testimonials", respondents: 210, percentage: 27 },
-    ],
   },
 ];
 
