@@ -2,6 +2,7 @@ import Link from "next/link";
 import { campaigns } from "@/lib/data";
 import { fmtCurrency, fmtNumber, fmtPercent } from "@/lib/format";
 import { TableCard, Th, Td } from "@/components/DataTable";
+import ConceptMetricChart from "@/components/ConceptMetricChart";
 
 export default function Home() {
   return (
@@ -60,6 +61,8 @@ export default function Home() {
           </tbody>
         </table>
       </TableCard>
+
+      <ConceptMetricChart campaigns={campaigns} />
     </div>
   );
 }
