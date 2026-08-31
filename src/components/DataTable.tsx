@@ -22,13 +22,13 @@ export function TableCard({
   );
 }
 
-const STICKY_SHADOW = "shadow-[2px_0_4px_-2px_rgba(0,0,0,0.08)]";
+const STICKY_EDGE = "border-r border-slate-200 shadow-[3px_0_6px_-3px_rgba(0,0,0,0.12)]";
 
 export function Th({ children, sticky }: { children: ReactNode; sticky?: boolean }) {
   return (
     <th
       className={`whitespace-nowrap bg-slate-50 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400 ${
-        sticky ? `sticky left-0 z-20 ${STICKY_SHADOW}` : ""
+        sticky ? `sticky left-0 z-20 ${STICKY_EDGE}` : ""
       }`}
     >
       {children}
@@ -48,7 +48,7 @@ export function Td({
   return (
     <td
       className={`whitespace-nowrap px-4 py-3 text-sm text-slate-700 ${
-        sticky ? `sticky left-0 z-10 ${stickyBg} ${STICKY_SHADOW}` : ""
+        sticky ? `sticky left-0 z-10 ${stickyBg} ${STICKY_EDGE}` : ""
       }`}
     >
       {children}

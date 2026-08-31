@@ -1,11 +1,9 @@
 import Link from "next/link";
-import { campaigns, aggregateMetrics } from "@/lib/data";
+import { campaigns } from "@/lib/data";
 import { fmtCurrency, fmtNumber, fmtPercent } from "@/lib/format";
 import { TableCard, Th, Td } from "@/components/DataTable";
 
 export default function Home() {
-  const totals = aggregateMetrics();
-
   return (
     <div className="flex flex-col gap-6 pt-2">
       <div>
@@ -59,21 +57,6 @@ export default function Home() {
                 <Td>{fmtNumber(c.metrics.saves)}</Td>
               </tr>
             ))}
-            <tr className="border-t-2 border-slate-200 bg-slate-50 font-semibold">
-              <Td sticky stickyBg="bg-slate-50">Total / Avg</Td>
-              <Td>{fmtCurrency(totals.adSpend)}</Td>
-              <Td>{fmtNumber(totals.impressions)}</Td>
-              <Td>{fmtNumber(totals.uniqueVisitors)}</Td>
-              <Td>{fmtNumber(totals.subscriptions)}</Td>
-              <Td>{fmtPercent(totals.conversionRate)}</Td>
-              <Td>{fmtCurrency(totals.costPerLead)}</Td>
-              <Td>{fmtCurrency(totals.costPerClick)}</Td>
-              <Td>{fmtPercent(totals.ctr)}</Td>
-              <Td>{fmtCurrency(totals.cpm)}</Td>
-              <Td>{fmtNumber(totals.likes)}</Td>
-              <Td>{fmtNumber(totals.shares)}</Td>
-              <Td>{fmtNumber(totals.saves)}</Td>
-            </tr>
           </tbody>
         </table>
       </TableCard>
