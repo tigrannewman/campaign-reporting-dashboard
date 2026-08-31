@@ -19,7 +19,7 @@ export default function Home() {
         <table className="w-full border-collapse">
           <thead>
             <tr>
-              <Th>Concept</Th>
+              <Th sticky>Concept</Th>
               <Th>Spends</Th>
               <Th>Impressions</Th>
               <Th>Visitors</Th>
@@ -38,9 +38,9 @@ export default function Home() {
             {campaigns.map((c) => (
               <tr
                 key={c.id}
-                className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
+                className="group border-b border-slate-100 last:border-0 hover:bg-slate-50"
               >
-                <Td>
+                <Td sticky>
                   <Link href={`/campaign/${c.id}`} className="font-medium text-accent hover:text-teal-700 hover:underline">
                     {c.name}
                   </Link>
@@ -60,7 +60,7 @@ export default function Home() {
               </tr>
             ))}
             <tr className="border-t-2 border-slate-200 bg-slate-50 font-semibold">
-              <Td>Total / Avg</Td>
+              <Td sticky stickyBg="bg-slate-50">Total / Avg</Td>
               <Td>{fmtCurrency(totals.adSpend)}</Td>
               <Td>{fmtNumber(totals.impressions)}</Td>
               <Td>{fmtNumber(totals.uniqueVisitors)}</Td>

@@ -22,17 +22,35 @@ export function TableCard({
   );
 }
 
-export function Th({ children }: { children: ReactNode }) {
+const STICKY_SHADOW = "shadow-[2px_0_4px_-2px_rgba(0,0,0,0.08)]";
+
+export function Th({ children, sticky }: { children: ReactNode; sticky?: boolean }) {
   return (
-    <th className="whitespace-nowrap bg-slate-50 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
+    <th
+      className={`whitespace-nowrap bg-slate-50 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400 ${
+        sticky ? `sticky left-0 z-20 ${STICKY_SHADOW}` : ""
+      }`}
+    >
       {children}
     </th>
   );
 }
 
-export function Td({ children }: { children: ReactNode }) {
+export function Td({
+  children,
+  sticky,
+  stickyBg = "bg-white group-hover:bg-slate-50",
+}: {
+  children: ReactNode;
+  sticky?: boolean;
+  stickyBg?: string;
+}) {
   return (
-    <td className="whitespace-nowrap px-4 py-3 text-sm text-slate-700">
+    <td
+      className={`whitespace-nowrap px-4 py-3 text-sm text-slate-700 ${
+        sticky ? `sticky left-0 z-10 ${stickyBg} ${STICKY_SHADOW}` : ""
+      }`}
+    >
       {children}
     </td>
   );
