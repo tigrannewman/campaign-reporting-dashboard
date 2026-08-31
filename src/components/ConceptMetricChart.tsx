@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import HorizontalBars from "@/components/charts/HorizontalBars";
+import VerticalBars from "@/components/charts/VerticalBars";
 import { TableCard } from "@/components/DataTable";
 import type { Campaign, Metrics } from "@/lib/data";
 
@@ -64,7 +64,7 @@ export default function ConceptMetricChart({ campaigns }: { campaigns: Campaign[
           ))}
         </select>
 
-        <HorizontalBars
+        <VerticalBars
           rows={rows}
           formatTick={(t) => formatTick(metric.kind, t)}
           formatValue={(v) => formatValue(metric.kind, v)}
