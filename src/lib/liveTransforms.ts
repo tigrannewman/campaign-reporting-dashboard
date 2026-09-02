@@ -71,6 +71,19 @@ export function interestsToChartData(rows: MetaAdsInterestsRow[]): InterestShare
 
 export type SurveyTabResult = { status: "ok"; report: SurveyReport } | { status: "empty" } | { status: "error" };
 
+// Picks a round bucket width (1/2/5 x 10^n) so a histogram always ends up
+// with roughly `targetBuckets` bars regardless of the value range, instead
+// of a fixed step that can produce hundreds of near-empty buckets.
+function niceBucketSize(max: number, targetBuckets = 8) {
+  if (max <= 0) return 1;
+  const rawStep = max / targetBuckets;
+  const exponent = Math.floor(Math.log10(rawStep));
+  const magnitude = 10 ** exponent;
+  const residual = rawStep / magnitude;
+  const niceResidual = residual <= 1 ? 1 : residual <= 2 ? 2 : residual <= 5 ? 5 : 10;
+  return niceResidual * magnitude;
+}
+
 export type SurveyReportRow = {
   email: string;
   submittedAt: string;
@@ -123,7 +136,7 @@ export function buildSurveyReport(fields: TypeformField[], items: TypeformRespon
         max: values[values.length - 1],
       };
 
-      const bucketSize = 10;
+      const bucketSize = niceBucketSize(numericStats.max);
       const maxBucket = Math.max(bucketSize, Math.ceil(numericStats.max / bucketSize) * bucketSize);
       const buckets = new Map<string, number>();
       for (let b = 0; b < maxBucket; b += bucketSize) {
