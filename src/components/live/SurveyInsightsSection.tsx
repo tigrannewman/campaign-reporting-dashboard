@@ -1,33 +1,24 @@
 import SurveyInsightsTabs from "@/components/SurveyInsightsTabs";
 import { getTypeformFields, getTypeformResponses } from "@/lib/typeform";
-import { buildSurveyReport, type SurveyReport } from "@/lib/liveTransforms";
-import { MOCK_VISITORS_SURVEY, MOCK_SUBSCRIBERS_SURVEY } from "@/lib/mockSurveyInsights";
+import { buildSurveyReport, type SurveyTabResult } from "@/lib/liveTransforms";
 import type { Campaign } from "@/lib/data";
 
-async function loadReport(formId: string | undefined, mock: SurveyReport): Promise<{ report: SurveyReport; isLive: boolean }> {
-  if (!formId) return { report: mock, isLive: false };
-
+async function loadSurveyTab(formId: string): Promise<SurveyTabResult> {
   try {
     const [fields, { items }] = await Promise.all([getTypeformFields(formId), getTypeformResponses(formId)]);
-    return { report: buildSurveyReport(fields, items), isLive: true };
+    if (items.length === 0) return { status: "empty" };
+    return { status: "ok", report: buildSurveyReport(fields, items) };
   } catch (err) {
-    console.error(`Typeform live fetch failed for form ${formId}, falling back to mock data:`, err);
-    return { report: mock, isLive: false };
+    console.error(`Typeform fetch failed for form ${formId}:`, err);
+    return { status: "error" };
   }
 }
 
 export default async function SurveyInsightsSection({ campaign }: { campaign: Campaign }) {
   const [visitors, subscribers] = await Promise.all([
-    loadReport(campaign.typeform?.visitorsFormId, MOCK_VISITORS_SURVEY),
-    loadReport(campaign.typeform?.subscribersFormId, MOCK_SUBSCRIBERS_SURVEY),
+    loadSurveyTab(campaign.typeform.visitorsFormId),
+    loadSurveyTab(campaign.typeform.subscribersFormId),
   ]);
 
-  return (
-    <SurveyInsightsTabs
-      visitors={visitors.report}
-      subscribers={subscribers.report}
-      visitorsIsLive={visitors.isLive}
-      subscribersIsLive={subscribers.isLive}
-    />
-  );
+  return <SurveyInsightsTabs visitors={visitors} subscribers={subscribers} />;
 }

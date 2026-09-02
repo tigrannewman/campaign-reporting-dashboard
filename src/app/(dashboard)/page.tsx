@@ -1,8 +1,6 @@
-import Link from "next/link";
-import { campaigns } from "@/lib/data";
-import { fmtCurrency, fmtNumber, fmtPercent } from "@/lib/format";
-import { TableCard, Th, Td } from "@/components/DataTable";
-import ConceptMetricChart from "@/components/ConceptMetricChart";
+import { Suspense } from "react";
+import { TableCardSkeleton } from "@/components/Skeleton";
+import ConceptsOverview from "@/components/live/ConceptsOverview";
 
 export default function Home() {
   return (
@@ -14,55 +12,9 @@ export default function Home() {
         </p>
       </div>
 
-      <TableCard>
-        <table className="w-full border-collapse">
-          <thead>
-            <tr>
-              <Th sticky>Concept</Th>
-              <Th>Spends</Th>
-              <Th>Impressions</Th>
-              <Th>Visitors</Th>
-              <Th>Subscriptions</Th>
-              <Th>Subscription Rate (%)</Th>
-              <Th>Cost Per Subscription</Th>
-              <Th>CPC</Th>
-              <Th>CTR (%)</Th>
-              <Th>CPM</Th>
-              <Th>Likes</Th>
-              <Th>Shares</Th>
-              <Th>Save</Th>
-            </tr>
-          </thead>
-          <tbody>
-            {campaigns.map((c) => (
-              <tr
-                key={c.id}
-                className="group border-b border-slate-100 last:border-0 hover:bg-slate-50"
-              >
-                <Td sticky>
-                  <Link href={`/campaign/${c.id}`} className="font-medium text-accent hover:text-teal-700 hover:underline">
-                    {c.name}
-                  </Link>
-                </Td>
-                <Td>{fmtCurrency(c.metrics.adSpend)}</Td>
-                <Td>{fmtNumber(c.metrics.impressions)}</Td>
-                <Td>{fmtNumber(c.metrics.uniqueVisitors)}</Td>
-                <Td>{fmtNumber(c.metrics.subscriptions)}</Td>
-                <Td>{fmtPercent(c.metrics.conversionRate)}</Td>
-                <Td>{fmtCurrency(c.metrics.costPerLead)}</Td>
-                <Td>{fmtCurrency(c.metrics.costPerClick)}</Td>
-                <Td>{fmtPercent(c.metrics.ctr)}</Td>
-                <Td>{fmtCurrency(c.metrics.cpm)}</Td>
-                <Td>{fmtNumber(c.metrics.likes)}</Td>
-                <Td>{fmtNumber(c.metrics.shares)}</Td>
-                <Td>{fmtNumber(c.metrics.saves)}</Td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </TableCard>
-
-      <ConceptMetricChart campaigns={campaigns} />
+      <Suspense fallback={<TableCardSkeleton rows={5} />}>
+        <ConceptsOverview />
+      </Suspense>
     </div>
   );
 }

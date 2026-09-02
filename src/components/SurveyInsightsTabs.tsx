@@ -2,27 +2,28 @@
 
 import { useState } from "react";
 import SurveyReport from "@/components/SurveyReport";
-import type { SurveyReport as SurveyReportData } from "@/lib/liveTransforms";
+import EmptyState from "@/components/EmptyState";
+import ErrorState from "@/components/ErrorState";
+import ErrorDot from "@/components/ErrorDot";
+import type { SurveyTabResult } from "@/lib/liveTransforms";
 
 type Tab = "visitors" | "subscribers";
 
 export default function SurveyInsightsTabs({
   visitors,
   subscribers,
-  visitorsIsLive = false,
-  subscribersIsLive = false,
 }: {
-  visitors: SurveyReportData;
-  subscribers: SurveyReportData;
-  visitorsIsLive?: boolean;
-  subscribersIsLive?: boolean;
+  visitors: SurveyTabResult;
+  subscribers: SurveyTabResult;
 }) {
   const [tab, setTab] = useState<Tab>("visitors");
 
-  const tabs: { id: Tab; label: string }[] = [
-    { id: "visitors", label: "Visitors" },
-    { id: "subscribers", label: "Subscribers" },
+  const tabs: { id: Tab; label: string; result: SurveyTabResult }[] = [
+    { id: "visitors", label: "Visitors", result: visitors },
+    { id: "subscribers", label: "Subscribers", result: subscribers },
   ];
+
+  const active = tabs.find((t) => t.id === tab)!;
 
   return (
     <div className="flex flex-col gap-4">
@@ -31,22 +32,21 @@ export default function SurveyInsightsTabs({
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
+            className={`flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium transition ${
               tab === t.id
                 ? "bg-accent text-white"
                 : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
             }`}
           >
             {t.label}
+            {t.result.status === "error" && <ErrorDot />}
           </button>
         ))}
       </div>
 
-      {tab === "visitors" ? (
-        <SurveyReport report={visitors} isLive={visitorsIsLive} />
-      ) : (
-        <SurveyReport report={subscribers} isLive={subscribersIsLive} />
-      )}
+      {active.result.status === "ok" && <SurveyReport report={active.result.report} />}
+      {active.result.status === "empty" && <EmptyState message="No survey responses yet" />}
+      {active.result.status === "error" && <ErrorState message="Failed to load survey responses" />}
     </div>
   );
 }

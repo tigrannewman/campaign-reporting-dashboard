@@ -18,6 +18,15 @@ export const initBigQuery = () => {
   });
 };
 
+async function callAdsProcedure<T>(procedure: string, projectId: string, iterationIds: string[]): Promise<T[]> {
+  const bigquery = initBigQuery();
+  const idsSql = iterationIds.map((id) => `'${id}'`).join(", ");
+  const [rows] = await bigquery.query({
+    query: `CALL \`prelaunch-transformed.prod_analytics.${procedure}\`('${projectId}', [${idsSql}]);`,
+  });
+  return rows as T[];
+}
+
 export type MetaAdsAngleRow = {
   iterationId: string;
   iterationName: string;
@@ -33,20 +42,65 @@ export type MetaAdsDemographicsRow = {
   percent: number;
 };
 
-export async function getMetaAdsAngles(projectIdeaId: string, versionIds: string[]) {
-  const bigquery = initBigQuery();
-  const versionIdsSql = versionIds.map((id) => `'${id}'`).join(", ");
-  const [rows] = await bigquery.query({
-    query: `CALL \`prelaunch-transformed.prod_analytics.getMetaAdsAngle\`('${projectIdeaId}', [${versionIdsSql}]);`,
-  });
-  return rows as MetaAdsAngleRow[];
+export type MetaAdsGeographicsRow = {
+  iterationId: string;
+  iterationName: string;
+  country: string;
+  percent: number;
+};
+
+export type MetaAdsInterestsRow = {
+  iterationId: string;
+  iterationName: string;
+  label: string;
+  percent: number;
+};
+
+export type AdsBreakdownRow = {
+  dateRange: string;
+  iterationName: string;
+  iterationNote: string;
+  fbSpend: number;
+  impressions: number;
+  visits: number;
+  subscriptions: number;
+  subscriptionRate: number;
+  costPerSubscription: number;
+  cpc: number;
+  ctr: number | null;
+  cpm: number;
+  projectId: string;
+  iterationId: string;
+};
+
+export type MetaAdsLikesSavesSharesRow = {
+  iterationId: string;
+  iterationName: string;
+  likes: number;
+  saves: number;
+  shares: number;
+};
+
+export function getMetaAdsAngles(projectId: string, iterationIds: string[]) {
+  return callAdsProcedure<MetaAdsAngleRow>("getMetaAdsAngle", projectId, iterationIds);
 }
 
-export async function getMetaAdsDemographics(projectIdeaId: string, versionIds: string[]) {
-  const bigquery = initBigQuery();
-  const versionIdsSql = versionIds.map((id) => `'${id}'`).join(", ");
-  const [rows] = await bigquery.query({
-    query: `CALL \`prelaunch-transformed.prod_analytics.getMetaAdsDemographics\`('${projectIdeaId}', [${versionIdsSql}]);`,
-  });
-  return rows as MetaAdsDemographicsRow[];
+export function getMetaAdsDemographics(projectId: string, iterationIds: string[]) {
+  return callAdsProcedure<MetaAdsDemographicsRow>("getMetaAdsDemographics", projectId, iterationIds);
+}
+
+export function getMetaAdsGeographics(projectId: string, iterationIds: string[]) {
+  return callAdsProcedure<MetaAdsGeographicsRow>("getMetaAdsGeographics", projectId, iterationIds);
+}
+
+export function getMetaAdsInterests(projectId: string, iterationIds: string[]) {
+  return callAdsProcedure<MetaAdsInterestsRow>("getMetaAdsInterests", projectId, iterationIds);
+}
+
+export function getIterationAdsBreakdown(projectId: string, iterationIds: string[]) {
+  return callAdsProcedure<AdsBreakdownRow>("getIterationAdsBreakdownLogi", projectId, iterationIds);
+}
+
+export function getMetaAdsLikesSavesShares(projectId: string, iterationIds: string[]) {
+  return callAdsProcedure<MetaAdsLikesSavesSharesRow>("getMetaAdsLikesSavesShares", projectId, iterationIds);
 }

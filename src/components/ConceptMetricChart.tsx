@@ -3,12 +3,12 @@
 import { useState } from "react";
 import VerticalBars from "@/components/charts/VerticalBars";
 import { TableCard } from "@/components/DataTable";
-import type { Campaign, Metrics } from "@/lib/data";
+import type { ConceptMetrics } from "@/lib/liveMetrics";
 
 type MetricKind = "currency" | "percent" | "number";
 
 type MetricDef = {
-  key: keyof Metrics;
+  key: keyof ConceptMetrics;
   label: string;
   kind: MetricKind;
 };
@@ -40,21 +40,27 @@ function formatTick(kind: MetricKind, value: number) {
   return value.toLocaleString("en-US");
 }
 
-export default function ConceptMetricChart({ campaigns }: { campaigns: Campaign[] }) {
-  const [metricKey, setMetricKey] = useState<keyof Metrics>("adSpend");
+export default function ConceptMetricChart({
+  concepts,
+}: {
+  concepts: { name: string; metrics: ConceptMetrics | null }[];
+}) {
+  const [metricKey, setMetricKey] = useState<keyof ConceptMetrics>("adSpend");
   const metric = METRICS.find((m) => m.key === metricKey) ?? METRICS[0];
 
-  const rows = campaigns.map((c) => ({
-    label: c.name,
-    value: c.metrics[metric.key],
-  }));
+  const rows = concepts
+    .filter((c) => c.metrics !== null)
+    .map((c) => ({
+      label: c.name,
+      value: c.metrics![metric.key],
+    }));
 
   return (
     <TableCard title="Metrics by Concept">
       <div className="flex flex-col gap-4 p-5">
         <select
           value={metric.key}
-          onChange={(e) => setMetricKey(e.target.value as keyof Metrics)}
+          onChange={(e) => setMetricKey(e.target.value as keyof ConceptMetrics)}
           className="w-full max-w-xs rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 sm:w-auto"
         >
           {METRICS.map((m) => (
@@ -64,11 +70,15 @@ export default function ConceptMetricChart({ campaigns }: { campaigns: Campaign[
           ))}
         </select>
 
-        <VerticalBars
-          rows={rows}
-          formatTick={(t) => formatTick(metric.kind, t)}
-          formatValue={(v) => formatValue(metric.kind, v)}
-        />
+        {rows.length > 0 ? (
+          <VerticalBars
+            rows={rows}
+            formatTick={(t) => formatTick(metric.kind, t)}
+            formatValue={(v) => formatValue(metric.kind, v)}
+          />
+        ) : (
+          <p className="py-10 text-center text-sm text-slate-400">No data available</p>
+        )}
       </div>
     </TableCard>
   );

@@ -1,351 +1,75 @@
-export type Metrics = {
-  adSpend: number;
-  impressions: number;
-  uniqueVisitors: number;
-  subscriptions: number;
-  ctr: number; // %
-  conversionRate: number; // % (Subscription Rate)
-  costPerLead: number; // $ (Cost Per Subscription)
-  cpm: number; // $
-  costPerClick: number; // $ (CPC)
-  likes: number;
-  shares: number;
-  saves: number;
-};
-
-export type AngleShare = {
-  label: string;
-  value: number; // %
-  color: string;
-};
-
-export type AgeGenderRow = {
-  range: string;
-  women: number; // %
-  men: number; // %
-  unknown?: number; // %
-};
-
-export type CountryShare = {
-  country: string;
-  value: number; // %
-};
-
-export type InterestShare = {
-  label: string;
-  value: number; // %
-};
-
-export type DemographicsCharts = {
-  angles: AngleShare[];
-  ageGender: AgeGenderRow[];
-  countries: CountryShare[];
-  interests: InterestShare[];
-};
-
 export type Campaign = {
   id: string;
   name: string;
-  metrics: Metrics;
-  demographicsCharts: DemographicsCharts;
-  bigQuery?: {
-    projectIdeaId: string;
-    versionIds: string[];
+  bigQuery: {
+    projectId: string;
+    iterationId: string;
   };
-  typeform?: {
-    visitorsFormId?: string;
-    subscribersFormId?: string;
+  typeform: {
+    visitorsFormId: string;
+    subscribersFormId: string;
   };
 };
-
-const ANGLE_COLORS = ["#3b82f6", "#f43f5e", "#14b8a6"];
 
 export const campaigns: Campaign[] = [
   {
     id: "campaign-1",
     name: "Spectrum Keyboard",
-    metrics: {
-      adSpend: 4250,
-      impressions: 512000,
-      uniqueVisitors: 8930,
-      subscriptions: 277,
-      ctr: 2.4,
-      conversionRate: 3.1,
-      costPerLead: 12.45,
-      cpm: 8.3,
-      costPerClick: 0.48,
-      likes: 1240,
-      shares: 312,
-      saves: 89,
-    },
-    demographicsCharts: {
-      angles: [
-        { label: "Problem/Solution", value: 33, color: ANGLE_COLORS[0] },
-        { label: "Social Proof", value: 40, color: ANGLE_COLORS[1] },
-        { label: "Urgency/Scarcity", value: 27, color: ANGLE_COLORS[2] },
-      ],
-      ageGender: [
-        { range: "18-24", women: 0.3, men: 0.4, unknown: 0.1 },
-        { range: "25-34", women: 5.8, men: 10.2 },
-        { range: "35-44", women: 9.1, men: 14.6 },
-        { range: "45-54", women: 8.4, men: 12.9 },
-        { range: "55-64", women: 8.7, men: 12.4 },
-        { range: "65+", women: 7.3, men: 9.8 },
-        { range: "Unknown", women: 0, men: 0 },
-      ],
-      countries: [
-        { country: "United States", value: 61 },
-        { country: "United Kingdom", value: 4.5 },
-        { country: "Canada", value: 3.8 },
-        { country: "Australia", value: 2.1 },
-        { country: "Germany", value: 1.4 },
-        { country: "Italy", value: 1.2 },
-        { country: "France", value: 0.9 },
-        { country: "Spain", value: 0.6 },
-      ],
-      interests: [
-        { label: "HomeAutomation", value: 28 },
-        { label: "FrequentTravelers", value: 11 },
-        { label: "DoorSecurity", value: 10.5 },
-        { label: "Anti-theftSystem", value: 8 },
-        { label: "WorkingParents", value: 7.2 },
-        { label: "EarlyTechAdopters", value: 5.3 },
-        { label: "SmartLock", value: 4.1 },
-        { label: "Professionals", value: 3.6 },
-        { label: "Homeowners", value: 2.4 },
-        { label: "EU", value: 1.0 },
-      ],
-    },
     bigQuery: {
-      projectIdeaId: "e6843bbb-e6b8-4d97-bb59-9c6bedefec9d",
-      versionIds: ["8cd76909-f3d4-4a8f-82dc-209a469bb0a6"],
+      projectId: "8d70d9a1-efe8-4ec3-9ff5-2015680a89d1",
+      iterationId: "22c2c584-aae1-413d-9879-86e24705cac5",
     },
     typeform: {
-      visitorsFormId: "CXXaDh7x",
+      visitorsFormId: "Hxa6ODRi",
+      subscribersFormId: "VF7Y5tIM",
     },
   },
   {
     id: "campaign-2",
     name: "Fusion Axis",
-    metrics: {
-      adSpend: 3680,
-      impressions: 467000,
-      uniqueVisitors: 7420,
-      subscriptions: 193,
-      ctr: 2.1,
-      conversionRate: 2.6,
-      costPerLead: 14.2,
-      cpm: 7.9,
-      costPerClick: 0.52,
-      likes: 980,
-      shares: 245,
-      saves: 61,
+    bigQuery: {
+      projectId: "20e07826-39d6-4b38-a3c2-7ea4281e4c3d",
+      iterationId: "c8753ae4-0c9b-4f5c-bbda-a4acce49288a",
     },
-    demographicsCharts: {
-      angles: [
-        { label: "Testimonial", value: 33, color: ANGLE_COLORS[0] },
-        { label: "Before/After", value: 36, color: ANGLE_COLORS[1] },
-        { label: "Limited Offer", value: 31, color: ANGLE_COLORS[2] },
-      ],
-      ageGender: [
-        { range: "18-24", women: 1.2, men: 1.6, unknown: 0.2 },
-        { range: "25-34", women: 9.5, men: 14.2 },
-        { range: "35-44", women: 10.8, men: 15.1 },
-        { range: "45-54", women: 7.2, men: 10.5 },
-        { range: "55-64", women: 6.1, men: 8.4 },
-        { range: "65+", women: 4.5, men: 6.9 },
-        { range: "Unknown", women: 0, men: 0 },
-      ],
-      countries: [
-        { country: "United States", value: 58 },
-        { country: "United Kingdom", value: 5.1 },
-        { country: "Canada", value: 4.2 },
-        { country: "Australia", value: 3.0 },
-        { country: "Germany", value: 1.6 },
-        { country: "Italy", value: 1.0 },
-        { country: "France", value: 0.7 },
-        { country: "Spain", value: 0.5 },
-      ],
-      interests: [
-        { label: "HomeAutomation", value: 22 },
-        { label: "FrequentTravelers", value: 14 },
-        { label: "WorkingParents", value: 8.8 },
-        { label: "DoorSecurity", value: 9 },
-        { label: "Anti-theftSystem", value: 7.5 },
-        { label: "EarlyTechAdopters", value: 6.0 },
-        { label: "Professionals", value: 4.2 },
-        { label: "SmartLock", value: 3.5 },
-        { label: "Homeowners", value: 3.0 },
-        { label: "EU", value: 1.3 },
-      ],
+    typeform: {
+      visitorsFormId: "YkdKhI9b",
+      subscribersFormId: "jTVgQuD8",
     },
   },
   {
     id: "campaign-3",
     name: "Genesis Modular Mouse System",
-    metrics: {
-      adSpend: 5120,
-      impressions: 601000,
-      uniqueVisitors: 10250,
-      subscriptions: 349,
-      ctr: 2.7,
-      conversionRate: 3.4,
-      costPerLead: 11.1,
-      cpm: 8.5,
-      costPerClick: 0.44,
-      likes: 1540,
-      shares: 402,
-      saves: 122,
+    bigQuery: {
+      projectId: "6d81b9ef-ccb7-4462-a2b5-0bdb049f3093",
+      iterationId: "1dc9f0fe-0b3c-4802-8cb9-59e04ba73054",
     },
-    demographicsCharts: {
-      angles: [
-        { label: "Educational", value: 35, color: ANGLE_COLORS[0] },
-        { label: "Social Proof", value: 37, color: ANGLE_COLORS[1] },
-        { label: "Founder Story", value: 28, color: ANGLE_COLORS[2] },
-      ],
-      ageGender: [
-        { range: "18-24", women: 0.6, men: 0.7, unknown: 0.1 },
-        { range: "25-34", women: 7.0, men: 11.5 },
-        { range: "35-44", women: 9.8, men: 14.0 },
-        { range: "45-54", women: 8.9, men: 13.2 },
-        { range: "55-64", women: 7.9, men: 11.6 },
-        { range: "65+", women: 6.4, men: 9.1 },
-        { range: "Unknown", women: 0, men: 0 },
-      ],
-      countries: [
-        { country: "United States", value: 63 },
-        { country: "United Kingdom", value: 4.0 },
-        { country: "Canada", value: 3.5 },
-        { country: "Australia", value: 2.4 },
-        { country: "Germany", value: 2.0 },
-        { country: "Italy", value: 0.9 },
-        { country: "France", value: 0.8 },
-        { country: "Spain", value: 0.4 },
-      ],
-      interests: [
-        { label: "HomeAutomation", value: 30 },
-        { label: "DoorSecurity", value: 12 },
-        { label: "FrequentTravelers", value: 9.5 },
-        { label: "Anti-theftSystem", value: 8.8 },
-        { label: "WorkingParents", value: 6.5 },
-        { label: "SmartLock", value: 4.6 },
-        { label: "EarlyTechAdopters", value: 4.8 },
-        { label: "Professionals", value: 3.1 },
-        { label: "Homeowners", value: 2.8 },
-        { label: "EU", value: 0.9 },
-      ],
+    typeform: {
+      visitorsFormId: "YAwy3C49",
+      subscribersFormId: "pEv0c5fW",
     },
   },
   {
     id: "campaign-4",
     name: "The BOX",
-    metrics: {
-      adSpend: 2980,
-      impressions: 389000,
-      uniqueVisitors: 6110,
-      subscriptions: 134,
-      ctr: 1.9,
-      conversionRate: 2.2,
-      costPerLead: 15.8,
-      cpm: 7.6,
-      costPerClick: 0.56,
-      likes: 740,
-      shares: 168,
-      saves: 44,
+    bigQuery: {
+      projectId: "a762498c-8e1f-479a-be38-abb43214b41c",
+      iterationId: "e42c54e9-1ba7-4429-920c-0ae33994ddab",
     },
-    demographicsCharts: {
-      angles: [
-        { label: "Urgency/Scarcity", value: 33, color: ANGLE_COLORS[0] },
-        { label: "Testimonial", value: 35, color: ANGLE_COLORS[1] },
-        { label: "Comparison", value: 32, color: ANGLE_COLORS[2] },
-      ],
-      ageGender: [
-        { range: "18-24", women: 0.2, men: 0.3 },
-        { range: "25-34", women: 4.1, men: 7.8 },
-        { range: "35-44", women: 7.5, men: 11.9 },
-        { range: "45-54", women: 8.8, men: 13.5 },
-        { range: "55-64", women: 9.6, men: 13.9 },
-        { range: "65+", women: 8.9, men: 12.1 },
-        { range: "Unknown", women: 0, men: 0 },
-      ],
-      countries: [
-        { country: "United States", value: 55 },
-        { country: "United Kingdom", value: 4.8 },
-        { country: "Canada", value: 4.6 },
-        { country: "Australia", value: 3.3 },
-        { country: "Germany", value: 1.3 },
-        { country: "Italy", value: 1.1 },
-        { country: "France", value: 0.9 },
-        { country: "Spain", value: 0.6 },
-      ],
-      interests: [
-        { label: "HomeAutomation", value: 19 },
-        { label: "FrequentTravelers", value: 13 },
-        { label: "WorkingParents", value: 9.4 },
-        { label: "DoorSecurity", value: 8 },
-        { label: "Anti-theftSystem", value: 6.9 },
-        { label: "EarlyTechAdopters", value: 5.5 },
-        { label: "Professionals", value: 4.8 },
-        { label: "Homeowners", value: 3.6 },
-        { label: "SmartLock", value: 3.0 },
-        { label: "EU", value: 1.5 },
-      ],
+    typeform: {
+      visitorsFormId: "OqL2ZWjy",
+      subscribersFormId: "knrR7Ahd",
     },
   },
   {
     id: "campaign-5",
     name: "Serene Flow",
-    metrics: {
-      adSpend: 6340,
-      impressions: 715000,
-      uniqueVisitors: 12480,
-      subscriptions: 474,
-      ctr: 3.0,
-      conversionRate: 3.8,
-      costPerLead: 9.9,
-      cpm: 8.9,
-      costPerClick: 0.41,
-      likes: 2010,
-      shares: 587,
-      saves: 176,
+    bigQuery: {
+      projectId: "2d774d4d-c857-4a14-91b7-a22f49a03ae9",
+      iterationId: "69fd84b8-bbe6-4e27-81d9-2742e95abc28",
     },
-    demographicsCharts: {
-      angles: [
-        { label: "Social Proof", value: 34, color: ANGLE_COLORS[0] },
-        { label: "Founder Story", value: 36, color: ANGLE_COLORS[1] },
-        { label: "Before/After", value: 30, color: ANGLE_COLORS[2] },
-      ],
-      ageGender: [
-        { range: "18-24", women: 0.3, men: 0.4, unknown: 0.1 },
-        { range: "25-34", women: 6.0, men: 10.5 },
-        { range: "35-44", women: 9.3, men: 14.9 },
-        { range: "45-54", women: 8.6, men: 13.0 },
-        { range: "55-64", women: 8.9, men: 12.7 },
-        { range: "65+", women: 7.5, men: 10.2 },
-        { range: "Unknown", women: 0, men: 0 },
-      ],
-      countries: [
-        { country: "United States", value: 64 },
-        { country: "United Kingdom", value: 4.3 },
-        { country: "Canada", value: 3.2 },
-        { country: "Australia", value: 2.0 },
-        { country: "Germany", value: 1.9 },
-        { country: "Italy", value: 0.8 },
-        { country: "France", value: 0.7 },
-        { country: "Spain", value: 0.5 },
-      ],
-      interests: [
-        { label: "HomeAutomation", value: 33 },
-        { label: "DoorSecurity", value: 11.5 },
-        { label: "Anti-theftSystem", value: 9.2 },
-        { label: "FrequentTravelers", value: 10 },
-        { label: "WorkingParents", value: 6.0 },
-        { label: "EarlyTechAdopters", value: 5.9 },
-        { label: "SmartLock", value: 4.4 },
-        { label: "Professionals", value: 3.3 },
-        { label: "Homeowners", value: 2.6 },
-        { label: "EU", value: 0.8 },
-      ],
+    typeform: {
+      visitorsFormId: "bKwyzgGM",
+      subscribersFormId: "KkGEadyj",
     },
   },
 ];

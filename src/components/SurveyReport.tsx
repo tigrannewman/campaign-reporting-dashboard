@@ -5,7 +5,7 @@ import LiveBadge from "@/components/LiveBadge";
 import { fmtNumber } from "@/lib/format";
 import type { SurveyReport as SurveyReportData } from "@/lib/liveTransforms";
 
-export default function SurveyReport({ report, isLive = false }: { report: SurveyReportData; isLive?: boolean }) {
+export default function SurveyReport({ report }: { report: SurveyReportData }) {
   return (
     <div className="flex flex-col gap-4">
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -14,26 +14,20 @@ export default function SurveyReport({ report, isLive = false }: { report: Surve
           <>
             <StatCard label={`Avg ${report.numericField.title}`} value={`$${report.numericStats.avg}`} />
             <StatCard label={`Median ${report.numericField.title}`} value={`$${report.numericStats.median}`} />
-            <StatCard
-              label={`Range`}
-              value={`$${report.numericStats.min} – $${report.numericStats.max}`}
-            />
+            <StatCard label="Range" value={`$${report.numericStats.min} – $${report.numericStats.max}`} />
           </>
         )}
       </div>
 
       {report.priceDistribution && report.numericField && (
-        <TableCard
-          title={`${report.numericField.title} — Distribution`}
-          badge={isLive ? <LiveBadge /> : undefined}
-        >
+        <TableCard title={`${report.numericField.title} — Distribution`} badge={<LiveBadge />}>
           <div className="p-5">
             <HorizontalBars rows={report.priceDistribution} unit="" />
           </div>
         </TableCard>
       )}
 
-      <TableCard title="Survey Responses" badge={isLive ? <LiveBadge /> : undefined}>
+      <TableCard title="Survey Responses" badge={<LiveBadge />}>
         <div className="max-h-[600px] overflow-y-auto">
           <table className="w-full border-collapse">
             <thead>

@@ -1,7 +1,29 @@
-import type { MetaAdsAngleRow, MetaAdsDemographicsRow } from "./bigquery";
-import type { AngleShare, AgeGenderRow } from "./data";
+import type { MetaAdsAngleRow, MetaAdsDemographicsRow, MetaAdsGeographicsRow, MetaAdsInterestsRow } from "./bigquery";
 import type { TypeformField, TypeformResponseItem } from "./typeform";
 import { formatAnswer } from "./typeform";
+
+export type AngleShare = {
+  label: string;
+  value: number;
+  color: string;
+};
+
+export type AgeGenderRow = {
+  range: string;
+  women: number;
+  men: number;
+  unknown?: number;
+};
+
+export type CountryShare = {
+  country: string;
+  value: number;
+};
+
+export type InterestShare = {
+  label: string;
+  value: number;
+};
 
 const ANGLE_COLORS = ["#3b82f6", "#f43f5e", "#14b8a6", "#f97316", "#8b5cf6", "#eab308"];
 
@@ -34,6 +56,20 @@ export function demographicsToAgeGender(rows: MetaAdsDemographicsRow[]): AgeGend
 
   return AGE_ORDER.map((age) => map.get(age)!);
 }
+
+export function geographicsToChartData(rows: MetaAdsGeographicsRow[]): CountryShare[] {
+  return rows
+    .map((r) => ({ country: r.country, value: Math.round(r.percent * 10) / 10 }))
+    .sort((a, b) => b.value - a.value);
+}
+
+export function interestsToChartData(rows: MetaAdsInterestsRow[]): InterestShare[] {
+  return rows
+    .map((r) => ({ label: r.label.trim(), value: Math.round(r.percent * 10) / 10 }))
+    .sort((a, b) => b.value - a.value);
+}
+
+export type SurveyTabResult = { status: "ok"; report: SurveyReport } | { status: "empty" } | { status: "error" };
 
 export type SurveyReportRow = {
   email: string;

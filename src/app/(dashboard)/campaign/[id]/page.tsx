@@ -1,13 +1,13 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { campaigns, getCampaign } from "@/lib/data";
-import { fmtCurrency, fmtNumber, fmtPercent } from "@/lib/format";
-import { TableCard } from "@/components/DataTable";
-import StatCard from "@/components/StatCard";
-import HorizontalBars from "@/components/charts/HorizontalBars";
-import { ChartCardSkeleton, TableCardSkeleton } from "@/components/Skeleton";
+import { StatCardSkeleton, ChartCardSkeleton, TableCardSkeleton } from "@/components/Skeleton";
+import MetricsCards from "@/components/live/MetricsCards";
+import EngagementCards from "@/components/live/EngagementCards";
 import AngleCard from "@/components/live/AngleCard";
 import AgeGenderCard from "@/components/live/AgeGenderCard";
+import CountryCard from "@/components/live/CountryCard";
+import InterestsCard from "@/components/live/InterestsCard";
 import SurveyInsightsSection from "@/components/live/SurveyInsightsSection";
 
 export const revalidate = 60;
@@ -25,8 +25,6 @@ export default async function CampaignPage({
   const campaign = getCampaign(id);
   if (!campaign) notFound();
 
-  const { metrics } = campaign;
-
   return (
     <div className="flex flex-col gap-8 pt-2">
       <div>
@@ -36,27 +34,33 @@ export default async function CampaignPage({
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatCard label="Spends" value={fmtCurrency(metrics.adSpend)} />
-        <StatCard label="Impressions" value={fmtNumber(metrics.impressions)} />
-        <StatCard label="Visitors" value={fmtNumber(metrics.uniqueVisitors)} />
-        <StatCard label="Subscriptions" value={fmtNumber(metrics.subscriptions)} />
-        <StatCard label="Subscription Rate" value={fmtPercent(metrics.conversionRate)} />
-        <StatCard label="Cost Per Subscription" value={fmtCurrency(metrics.costPerLead)} />
-        <StatCard label="CPC" value={fmtCurrency(metrics.costPerClick)} />
-        <StatCard label="Click Through Rate" value={fmtPercent(metrics.ctr)} />
-        <StatCard label="CPM" value={fmtCurrency(metrics.cpm)} />
-      </div>
+      <Suspense
+        fallback={
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {Array.from({ length: 9 }).map((_, i) => (
+              <StatCardSkeleton key={i} />
+            ))}
+          </div>
+        }
+      >
+        <MetricsCards campaign={campaign} />
+      </Suspense>
 
       <div>
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-400">
           Engagement Metrics
         </h2>
-        <div className="grid grid-cols-3 gap-3">
-          <StatCard label="Likes" value={fmtNumber(metrics.likes)} />
-          <StatCard label="Shares" value={fmtNumber(metrics.shares)} />
-          <StatCard label="Save" value={fmtNumber(metrics.saves)} />
-        </div>
+        <Suspense
+          fallback={
+            <div className="grid grid-cols-3 gap-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <StatCardSkeleton key={i} />
+              ))}
+            </div>
+          }
+        >
+          <EngagementCards campaign={campaign} />
+        </Suspense>
       </div>
 
       <div>
@@ -70,16 +74,12 @@ export default async function CampaignPage({
           <Suspense fallback={<ChartCardSkeleton title="Age and Gender" />}>
             <AgeGenderCard campaign={campaign} />
           </Suspense>
-          <TableCard title="Country">
-            <div className="p-5">
-              <HorizontalBars rows={campaign.demographicsCharts.countries.map((c) => ({ label: c.country, value: c.value }))} />
-            </div>
-          </TableCard>
-          <TableCard title="Interests">
-            <div className="p-5">
-              <HorizontalBars rows={campaign.demographicsCharts.interests} />
-            </div>
-          </TableCard>
+          <Suspense fallback={<TableCardSkeleton title="Country" rows={5} />}>
+            <CountryCard campaign={campaign} />
+          </Suspense>
+          <Suspense fallback={<TableCardSkeleton title="Interests" rows={5} />}>
+            <InterestsCard campaign={campaign} />
+          </Suspense>
         </div>
       </div>
 
