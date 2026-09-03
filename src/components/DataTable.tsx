@@ -47,15 +47,17 @@ export function Th({ children, sticky }: { children: ReactNode; sticky?: boolean
 export function Td({
   children,
   sticky,
+  wrap = false,
   stickyBg = "bg-white group-hover:bg-slate-50",
 }: {
   children: ReactNode;
   sticky?: boolean;
+  wrap?: boolean;
   stickyBg?: string;
 }) {
   return (
     <td
-      className={`whitespace-nowrap px-4 py-3 text-sm text-slate-700 ${
+      className={`px-4 py-3 text-sm text-slate-700 ${wrap ? "min-w-[280px] max-w-[480px] whitespace-normal" : "whitespace-nowrap"} ${
         sticky ? `sticky left-0 z-10 ${stickyBg} ${STICKY_EDGE}` : ""
       }`}
     >

@@ -74,6 +74,18 @@ export type ChoiceQuestion = {
   segments: { label: string; value: number; color: string }[];
 };
 
+export type OpenEndedResponse = {
+  answer: string;
+  email: string;
+  submittedAt: string;
+};
+
+export type OpenEndedQuestion = {
+  id: string;
+  title: string;
+  responses: OpenEndedResponse[];
+};
+
 export type SurveyReport = {
   totalResponses: number;
   columns: { id: string; title: string }[];
@@ -82,7 +94,24 @@ export type SurveyReport = {
   numericStats?: { avg: number; median: number; min: number; max: number };
   priceDistribution?: { label: string; value: number }[];
   choiceQuestions: ChoiceQuestion[];
+  openEndedQuestions: OpenEndedQuestion[];
 };
+
+const OPEN_ENDED_TYPES = new Set(["short_text", "long_text"]);
+
+function buildOpenEndedQuestions(fields: TypeformField[], items: TypeformResponseItem[]): OpenEndedQuestion[] {
+  return fields
+    .filter((f) => OPEN_ENDED_TYPES.has(f.type))
+    .map((field) => ({
+      id: field.id,
+      title: field.title,
+      responses: items.map((item) => ({
+        answer: formatAnswer(item.answers.find((a) => a.field.id === field.id)),
+        email: item.hidden?.email ?? "—",
+        submittedAt: item.submitted_at,
+      })),
+    }));
+}
 
 const CHOICE_COLORS = ["#3b82f6", "#f43f5e", "#14b8a6", "#f97316", "#8b5cf6", "#eab308", "#ec4899", "#06b6d4"];
 
@@ -152,7 +181,9 @@ export function buildSurveyReport(
   questionOrder?: string[]
 ): SurveyReport {
   const fields = reorderFields(rawFields, questionOrder);
-  const columns = fields.map((f) => ({ id: f.id, title: f.title }));
+  // Open-ended (free-text) questions get their own stacked tables instead of
+  // being crammed into the combined table alongside structured answers.
+  const columns = fields.filter((f) => !OPEN_ENDED_TYPES.has(f.type)).map((f) => ({ id: f.id, title: f.title }));
   const numericField = fields.find((f) => f.type === "number");
 
   const rows: SurveyReportRow[] = items.map((item) => {
@@ -211,5 +242,6 @@ export function buildSurveyReport(
     numericStats,
     priceDistribution,
     choiceQuestions: buildChoiceQuestions(fields, items),
+    openEndedQuestions: buildOpenEndedQuestions(fields, items),
   };
 }

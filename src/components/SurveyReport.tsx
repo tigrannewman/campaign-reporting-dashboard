@@ -40,6 +40,31 @@ export default function SurveyReport({ report }: { report: SurveyReportData }) {
         </div>
       )}
 
+      {report.openEndedQuestions.map((q) => (
+        <TableCard key={q.id} title={q.title} badge={<LiveBadge />}>
+          <div className="max-h-[400px] overflow-y-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr>
+                  <Th>Answer</Th>
+                  <Th>Email</Th>
+                  <Th>Submitted</Th>
+                </tr>
+              </thead>
+              <tbody>
+                {q.responses.map((r, i) => (
+                  <tr key={i} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
+                    <Td wrap>{r.answer}</Td>
+                    <Td>{r.email}</Td>
+                    <Td>{new Date(r.submittedAt).toLocaleDateString()}</Td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </TableCard>
+      ))}
+
       <TableCard title="Survey Responses" badge={<LiveBadge />}>
         <div className="max-h-[600px] overflow-y-auto">
           <table className="w-full border-collapse">
