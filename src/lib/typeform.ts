@@ -3,6 +3,7 @@ export type TypeformField = {
   ref?: string;
   title: string;
   type: string;
+  choices?: { id: string; label: string }[];
 };
 
 export type TypeformAnswer = {
@@ -42,12 +43,15 @@ export async function getTypeformFields(formId: string): Promise<TypeformField[]
     throw new Error(`Typeform form fetch failed: ${res.status}`);
   }
   const data = await res.json();
-  return (data.fields ?? []).map((f: TypeformField) => ({
-    id: f.id,
-    ref: f.ref,
-    title: f.title,
-    type: f.type,
-  }));
+  return (data.fields ?? []).map(
+    (f: TypeformField & { properties?: { choices?: { id: string; label: string }[] } }) => ({
+      id: f.id,
+      ref: f.ref,
+      title: f.title,
+      type: f.type,
+      choices: f.properties?.choices?.map((c) => ({ id: c.id, label: c.label })),
+    })
+  );
 }
 
 export async function getTypeformResponses(formId: string): Promise<{ total: number; items: TypeformResponseItem[] }> {

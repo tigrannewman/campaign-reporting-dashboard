@@ -126,13 +126,24 @@ function buildChoiceQuestions(fields: TypeformField[], items: TypeformResponseIt
 
     if (total === 0) continue;
 
-    const segments = Array.from(counts.entries())
-      .sort((a, b) => b[1] - a[1])
-      .map(([label, count], i) => ({
-        label,
-        value: Math.round((count / total) * 1000) / 10,
-        color: CHOICE_COLORS[i % CHOICE_COLORS.length],
-      }));
+    // Order segments by the question's defined choice order (as authored in
+    // Typeform) rather than by response count, falling back to first-seen
+    // order for anything not in that list (e.g. a free-text "Other" choice).
+    const definedOrder = field.choices?.map((c) => c.label) ?? [];
+    const labels = Array.from(counts.keys()).sort((a, b) => {
+      const ai = definedOrder.indexOf(a);
+      const bi = definedOrder.indexOf(b);
+      if (ai === -1 && bi === -1) return 0;
+      if (ai === -1) return 1;
+      if (bi === -1) return -1;
+      return ai - bi;
+    });
+
+    const segments = labels.map((label, i) => ({
+      label,
+      value: Math.round(((counts.get(label) ?? 0) / total) * 1000) / 10,
+      color: CHOICE_COLORS[i % CHOICE_COLORS.length],
+    }));
 
     questions.push({ id: field.id, title: field.title, segments });
   }
