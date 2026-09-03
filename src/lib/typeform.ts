@@ -65,6 +65,19 @@ export async function getTypeformResponses(formId: string): Promise<{ total: num
   return { total: data.total_items ?? 0, items: data.items ?? [] };
 }
 
+// total_items is accurate regardless of page_size, so a minimal page_size
+// keeps this cheap when only the count is needed.
+export async function getTypeformResponseCount(formId: string): Promise<number> {
+  const res = await fetch(`https://api.typeform.com/forms/${formId}/responses?page_size=1`, {
+    headers: { Authorization: `Bearer ${requireToken()}` },
+  });
+  if (!res.ok) {
+    throw new Error(`Typeform responses fetch failed: ${res.status}`);
+  }
+  const data = await res.json();
+  return data.total_items ?? 0;
+}
+
 export function formatAnswer(answer: TypeformAnswer | undefined): string {
   if (!answer) return "—";
   switch (answer.type) {

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { TableCardSkeleton } from "@/components/Skeleton";
 import ConceptsOverview from "@/components/live/ConceptsOverview";
+import SurveyResponsesChart from "@/components/live/SurveyResponsesChart";
 
 export default function Home() {
   return (
@@ -14,6 +15,17 @@ export default function Home() {
 
       <Suspense fallback={<TableCardSkeleton rows={5} />}>
         <ConceptsOverview />
+      </Suspense>
+
+      <Suspense
+        fallback={
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <TableCardSkeleton title="Visitors Survey Responses" rows={5} />
+            <TableCardSkeleton title="Subscribers Survey Responses" rows={5} />
+          </div>
+        }
+      >
+        <SurveyResponsesChart />
       </Suspense>
     </div>
   );
