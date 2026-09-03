@@ -126,18 +126,15 @@ function buildChoiceQuestions(fields: TypeformField[], items: TypeformResponseIt
 
     if (total === 0) continue;
 
-    // Order segments by the question's defined choice order (as authored in
-    // Typeform) rather than by response count, falling back to first-seen
-    // order for anything not in that list (e.g. a free-text "Other" choice).
-    const definedOrder = field.choices?.map((c) => c.label) ?? [];
-    const labels = Array.from(counts.keys()).sort((a, b) => {
-      const ai = definedOrder.indexOf(a);
-      const bi = definedOrder.indexOf(b);
-      if (ai === -1 && bi === -1) return 0;
-      if (ai === -1) return 1;
-      if (bi === -1) return -1;
-      return ai - bi;
-    });
+    // Start from every option defined on the question (in Typeform's own
+    // order) so choices nobody picked still show up at 0%, then append any
+    // observed label that isn't in that list (e.g. a free-text "Other").
+    const definedLabels = field.choices?.map((c) => c.label) ?? [];
+    const observedLabels = Array.from(counts.keys());
+    const labels =
+      definedLabels.length > 0
+        ? [...definedLabels, ...observedLabels.filter((l) => !definedLabels.includes(l))]
+        : observedLabels;
 
     const segments = labels.map((label, i) => ({
       label,
