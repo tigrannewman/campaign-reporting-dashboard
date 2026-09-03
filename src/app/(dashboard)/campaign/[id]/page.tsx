@@ -6,8 +6,6 @@ import MetricsCards from "@/components/live/MetricsCards";
 import EngagementCards from "@/components/live/EngagementCards";
 import AngleCard from "@/components/live/AngleCard";
 import AgeGenderCard from "@/components/live/AgeGenderCard";
-import CountryCard from "@/components/live/CountryCard";
-import InterestsCard from "@/components/live/InterestsCard";
 import SurveyInsightsSection from "@/components/live/SurveyInsightsSection";
 
 export const revalidate = 60;
@@ -73,12 +71,6 @@ export default async function CampaignPage({
           </Suspense>
           <Suspense fallback={<ChartCardSkeleton title="Age and Gender" />}>
             <AgeGenderCard campaign={campaign} />
-          </Suspense>
-          <Suspense fallback={<TableCardSkeleton title="Country" rows={5} />}>
-            <CountryCard campaign={campaign} />
-          </Suspense>
-          <Suspense fallback={<TableCardSkeleton title="Interests" rows={5} />}>
-            <InterestsCard campaign={campaign} />
           </Suspense>
         </div>
       </div>

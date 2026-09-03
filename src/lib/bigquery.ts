@@ -42,20 +42,6 @@ export type MetaAdsDemographicsRow = {
   percent: number;
 };
 
-export type MetaAdsGeographicsRow = {
-  iterationId: string;
-  iterationName: string;
-  country: string;
-  percent: number;
-};
-
-export type MetaAdsInterestsRow = {
-  iterationId: string;
-  iterationName: string;
-  label: string;
-  percent: number;
-};
-
 export type AdsBreakdownRow = {
   dateRange: string;
   iterationName: string;
@@ -87,14 +73,6 @@ export function getMetaAdsAngles(projectId: string, iterationIds: string[]) {
 
 export function getMetaAdsDemographics(projectId: string, iterationIds: string[]) {
   return callAdsProcedure<MetaAdsDemographicsRow>("getMetaAdsDemographics", projectId, iterationIds);
-}
-
-export function getMetaAdsGeographics(projectId: string, iterationIds: string[]) {
-  return callAdsProcedure<MetaAdsGeographicsRow>("getMetaAdsGeographics", projectId, iterationIds);
-}
-
-export function getMetaAdsInterests(projectId: string, iterationIds: string[]) {
-  return callAdsProcedure<MetaAdsInterestsRow>("getMetaAdsInterests", projectId, iterationIds);
 }
 
 export function getIterationAdsBreakdown(projectId: string, iterationIds: string[]) {

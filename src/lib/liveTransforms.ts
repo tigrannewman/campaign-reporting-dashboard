@@ -1,4 +1,4 @@
-import type { MetaAdsAngleRow, MetaAdsDemographicsRow, MetaAdsGeographicsRow, MetaAdsInterestsRow } from "./bigquery";
+import type { MetaAdsAngleRow, MetaAdsDemographicsRow } from "./bigquery";
 import type { TypeformField, TypeformResponseItem } from "./typeform";
 import { formatAnswer } from "./typeform";
 
@@ -13,16 +13,6 @@ export type AgeGenderRow = {
   women: number;
   men: number;
   unknown?: number;
-};
-
-export type CountryShare = {
-  country: string;
-  value: number;
-};
-
-export type InterestShare = {
-  label: string;
-  value: number;
 };
 
 const ANGLE_COLORS = ["#3b82f6", "#f43f5e", "#14b8a6", "#f97316", "#8b5cf6", "#eab308"];
@@ -55,18 +45,6 @@ export function demographicsToAgeGender(rows: MetaAdsDemographicsRow[]): AgeGend
   }
 
   return AGE_ORDER.map((age) => map.get(age)!);
-}
-
-export function geographicsToChartData(rows: MetaAdsGeographicsRow[]): CountryShare[] {
-  return rows
-    .map((r) => ({ country: r.country, value: Math.round(r.percent * 10) / 10 }))
-    .sort((a, b) => b.value - a.value);
-}
-
-export function interestsToChartData(rows: MetaAdsInterestsRow[]): InterestShare[] {
-  return rows
-    .map((r) => ({ label: r.label.trim(), value: Math.round(r.percent * 10) / 10 }))
-    .sort((a, b) => b.value - a.value);
 }
 
 export type SurveyTabResult = { status: "ok"; report: SurveyReport } | { status: "empty" } | { status: "error" };
@@ -148,7 +126,32 @@ function buildChoiceQuestions(fields: TypeformField[], items: TypeformResponseIt
   return questions;
 }
 
-export function buildSurveyReport(fields: TypeformField[], items: TypeformResponseItem[]): SurveyReport {
+function normalizeTitle(title: string) {
+  return title.trim().replace(/\s+/g, " ").toLowerCase();
+}
+
+// Reorders fields to match a client-provided question order (matched by
+// normalized title). Anything not found in `order` keeps its original
+// Typeform position, appended after the ordered ones.
+function reorderFields(fields: TypeformField[], order?: string[]): TypeformField[] {
+  if (!order || order.length === 0) return fields;
+  const orderIndex = new Map(order.map((title, i) => [normalizeTitle(title), i]));
+  return [...fields].sort((a, b) => {
+    const ai = orderIndex.get(normalizeTitle(a.title));
+    const bi = orderIndex.get(normalizeTitle(b.title));
+    if (ai === undefined && bi === undefined) return 0;
+    if (ai === undefined) return 1;
+    if (bi === undefined) return -1;
+    return ai - bi;
+  });
+}
+
+export function buildSurveyReport(
+  rawFields: TypeformField[],
+  items: TypeformResponseItem[],
+  questionOrder?: string[]
+): SurveyReport {
+  const fields = reorderFields(rawFields, questionOrder);
   const columns = fields.map((f) => ({ id: f.id, title: f.title }));
   const numericField = fields.find((f) => f.type === "number");
 
