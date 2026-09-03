@@ -90,6 +90,12 @@ export type SurveyReportRow = {
   answers: Record<string, string>;
 };
 
+export type ChoiceQuestion = {
+  id: string;
+  title: string;
+  segments: { label: string; value: number; color: string }[];
+};
+
 export type SurveyReport = {
   totalResponses: number;
   columns: { id: string; title: string }[];
@@ -97,7 +103,42 @@ export type SurveyReport = {
   numericField?: { id: string; title: string };
   numericStats?: { avg: number; median: number; min: number; max: number };
   priceDistribution?: { label: string; value: number }[];
+  choiceQuestions: ChoiceQuestion[];
 };
+
+const CHOICE_COLORS = ["#3b82f6", "#f43f5e", "#14b8a6", "#f97316", "#8b5cf6", "#eab308", "#ec4899", "#06b6d4"];
+
+function buildChoiceQuestions(fields: TypeformField[], items: TypeformResponseItem[]): ChoiceQuestion[] {
+  const choiceFields = fields.filter((f) => f.type === "multiple_choice");
+  const questions: ChoiceQuestion[] = [];
+
+  for (const field of choiceFields) {
+    const counts = new Map<string, number>();
+    let total = 0;
+
+    for (const item of items) {
+      const answer = item.answers.find((a) => a.field.id === field.id);
+      if (answer?.type === "choice" && answer.choice?.label) {
+        counts.set(answer.choice.label, (counts.get(answer.choice.label) ?? 0) + 1);
+        total++;
+      }
+    }
+
+    if (total === 0) continue;
+
+    const segments = Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([label, count], i) => ({
+        label,
+        value: Math.round((count / total) * 1000) / 10,
+        color: CHOICE_COLORS[i % CHOICE_COLORS.length],
+      }));
+
+    questions.push({ id: field.id, title: field.title, segments });
+  }
+
+  return questions;
+}
 
 export function buildSurveyReport(fields: TypeformField[], items: TypeformResponseItem[]): SurveyReport {
   const columns = fields.map((f) => ({ id: f.id, title: f.title }));
@@ -158,5 +199,6 @@ export function buildSurveyReport(fields: TypeformField[], items: TypeformRespon
     numericField: numericField ? { id: numericField.id, title: numericField.title } : undefined,
     numericStats,
     priceDistribution,
+    choiceQuestions: buildChoiceQuestions(fields, items),
   };
 }

@@ -1,6 +1,7 @@
 import { TableCard, Th, Td } from "@/components/DataTable";
 import StatCard from "@/components/StatCard";
 import HorizontalBars from "@/components/charts/HorizontalBars";
+import DonutChart from "@/components/charts/DonutChart";
 import LiveBadge from "@/components/LiveBadge";
 import { fmtNumber } from "@/lib/format";
 import type { SurveyReport as SurveyReportData } from "@/lib/liveTransforms";
@@ -25,6 +26,18 @@ export default function SurveyReport({ report }: { report: SurveyReportData }) {
             <HorizontalBars rows={report.priceDistribution} unit="" />
           </div>
         </TableCard>
+      )}
+
+      {report.choiceQuestions.length > 0 && (
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {report.choiceQuestions.map((q) => (
+            <TableCard key={q.id} title={q.title} badge={<LiveBadge />}>
+              <div className="p-5">
+                <DonutChart segments={q.segments} />
+              </div>
+            </TableCard>
+          ))}
+        </div>
       )}
 
       <TableCard title="Survey Responses" badge={<LiveBadge />}>
