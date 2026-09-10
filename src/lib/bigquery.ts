@@ -18,14 +18,24 @@ export const initBigQuery = () => {
   });
 };
 
-async function callAdsProcedure<T>(procedure: string, projectId: string, iterationIds: string[]): Promise<T[]> {
+async function callAdsProcedure<T>(
+  procedure: string,
+  projectId: string,
+  iterationIds: string[],
+  extraArgsSql: string[] = []
+): Promise<T[]> {
   const bigquery = initBigQuery();
   const idsSql = iterationIds.map((id) => `'${id}'`).join(", ");
+  const args = [`'${projectId}'`, `[${idsSql}]`, ...extraArgsSql].join(", ");
   const [rows] = await bigquery.query({
-    query: `CALL \`prelaunch-transformed.prod_analytics.${procedure}\`('${projectId}', [${idsSql}]);`,
+    query: `CALL \`prelaunch-transformed.prod_analytics.${procedure}\`(${args});`,
   });
   return rows as T[];
 }
+
+// Selects which of three parallel percent measures getMetaAdsAngle/
+// getMetaAdsDemographics return: landing-page-view %, lead %, or purchase %.
+export type ConversionType = "All" | "Subscribers" | "Reservees";
 
 export type MetaAdsAngleRow = {
   iterationId: string;
@@ -67,12 +77,18 @@ export type MetaAdsLikesSavesSharesRow = {
   shares: number;
 };
 
-export function getMetaAdsAngles(projectId: string, iterationIds: string[]) {
-  return callAdsProcedure<MetaAdsAngleRow>("getMetaAdsAngle", projectId, iterationIds);
+export function getMetaAdsAngles(projectId: string, iterationIds: string[], conversionType: ConversionType = "All") {
+  return callAdsProcedure<MetaAdsAngleRow>("getMetaAdsAngle", projectId, iterationIds, [`'${conversionType}'`]);
 }
 
-export function getMetaAdsDemographics(projectId: string, iterationIds: string[]) {
-  return callAdsProcedure<MetaAdsDemographicsRow>("getMetaAdsDemographics", projectId, iterationIds);
+export function getMetaAdsDemographics(
+  projectId: string,
+  iterationIds: string[],
+  conversionType: ConversionType = "All"
+) {
+  return callAdsProcedure<MetaAdsDemographicsRow>("getMetaAdsDemographics", projectId, iterationIds, [
+    `'${conversionType}'`,
+  ]);
 }
 
 export function getIterationAdsBreakdown(projectId: string, iterationIds: string[]) {
